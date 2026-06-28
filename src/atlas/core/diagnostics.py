@@ -111,6 +111,11 @@ class SessionNegotiationError(AtlasError):
     def __init__(self, message: str, context: Optional[Dict[str, str]] = None):
         super().__init__(code="ERR_SESSION_NEGOTIATION", severity=Severity.RECOVERABLE, message=message, context=context or {})
 
+class InvocationStateError(AtlasError):
+    """Raised when an illegal invocation lifecycle transition is attempted."""
+    def __init__(self, message: str, context: Optional[Dict[str, str]] = None):
+        super().__init__(code="ERR_INVOCATION_STATE", severity=Severity.RECOVERABLE, message=message, context=context or {})
+
 
 
 # ---------------------------------------------------------
