@@ -1,9 +1,14 @@
-site_name: Atlas Framework
-site_description: A modular framework for building Personal Operating Systems.
-repo_url: https://github.com/your-org/atlas
+site_name: Atlas Software Platform
+site_description: A modular, language-independent software platform.
+repo_url: https://github.com/Aadit-Garg/Atlas
 
 theme:
   name: material
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - toc.integrate
   palette:
     # Palette toggle for light mode
     - scheme: default
@@ -16,19 +21,34 @@ theme:
         icon: material/brightness-4
         name: Switch to light mode
 
+docs_dir: docs
+
 nav:
   - Home: index.md
-  - Architecture:
-    - Overview: architecture.md
-    - Worker Lifecycle: architecture/worker-lifecycle.md
-    - Model System: architecture/model-system.md
-    - Resolution: architecture/resolution.md
-  - Workers: workers.md
-  - Models: models.md
-  - Roles: roles.md
-  - Communication: communication.md
-  - Core: core.md
-  - History:
+  - The Constitution: CONSTITUTION.md
+  - Foundational Concepts:
+    - Philosophy: philosophy/philosophy.md
+    - Vision: philosophy/vision.md
+    - Studio Suite: studio-suite.md
+  - Architecture (v1.0):
+    - Execution Model: architecture/execution-model.md
+    - Core Runtime: specs/Core.md
+    - Runtime Lifecycle: specs/Runtime.md
+    - Workers: specs/Workers.md
+    - Models: specs/Models.md
+    - Roles: specs/Roles.md
+    - Registry: specs/Registry.md
+    - Capabilities: specs/Capabilities.md
+    - Communication: specs/Communication.md
+    - Manifest Schema: specs/ManifestSchema.md
+  - Implementation Planning:
+    - Runtime Blueprint: architecture/runtime-blueprint.md
+    - Phase 1.1 - Manifest Loader: specs/implementation/phase-1.1/Phase1-ManifestLoader.md
+    - Phase 1.1 - Dynamic Loader: specs/implementation/phase-1.1/Phase1-DynamicLoader.md
+    - Phase 1.1 - Global Registry: specs/implementation/phase-1.1/Phase1-Registry.md
+    - Phase 1.1 - Testing: specs/implementation/phase-1.1/Phase1-Testing.md
+    - Phase 1.1 - Diagnostics: specs/implementation/phase-1.1/Phase1-Diagnostics.md
+  - History & ADRs:
     - Naming Evolution: history/naming.md
 
 plugins:
