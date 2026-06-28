@@ -31,15 +31,15 @@ Atlas solves this by introducing **Workers** and **Models**. By forcing all exec
 
 ## Core Concepts
 
-- **Worker:** The ONLY executable primitive in Atlas. Everything, from a database driver to a UI dashboard, is a Worker.
-- **Model:** The declarative, tool-independent blueprint that a Worker implements. Models define schemas, capabilities, and interfaces.
+- **Worker:** The ONLY executable primitive in Atlas. Owns business logic and state.
+- **Room:** An execution context representing a collaboration between Workers. Rooms are stewarded by Atlas.
+- **Session:** The communication primitive connecting Workers. Exists inside Rooms.
+- **Binding:** A negotiated connection established by Atlas between a requesting Worker and a providing Worker.
+- **Invocation:** The actual execution request sent over a Session and processed by a Worker.
+- **Model:** The declarative, tool-independent blueprint that a Worker implements.
 - **Role:** A metadata tag (e.g., `database`, `manager`, `ai`) that describes a Worker to the Studio Suite.
-- **Capability:** A specific piece of functionality defined by a Model and exported/imported by a Worker.
-- **Manager:** A standard Worker that happens to have the `manager` Role. Managers orchestrate other Workers to form a product.
-- **Widget:** A UI component exported by a Worker as a standard Capability.
-- **Registry:** The runtime metadata store containing discovered Workers, Models, and Roles.
-- **Session:** The active binding negotiated by Atlas between a Worker requesting a Capability and a Worker providing it.
-- **Communication:** Workers communicate *directly* over the Data Plane using the Session binding. Atlas does not route messages.
+- **Registry:** Stores runtime facts. Split into the **Global Registry** (macro-state) and **Room Registry** (execution cache).
+- **Communication:** Workers communicate by sending Headers. Atlas handles the Transport and Translation layers to guarantee language neutrality.
 
 ---
 

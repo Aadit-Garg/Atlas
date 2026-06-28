@@ -9,12 +9,14 @@ Atlas itself is just the execution model (the Runtime). To build, validate, and 
 **Miron** is the visual runtime console for Atlas. 
 *(Conceptual equivalent: Task Manager + Docker Desktop + Runtime Inspector).*
 
+Architecturally, **Miron is a Worker**. It is not a special runtime primitive. It uses standard Sessions (with upgraded Observer privileges) to inspect and manage other Workers and Rooms.
+
 **Responsibilities:**
 - Inspect running Workers in real-time.
 - Monitor Data Plane communication and Session health.
 - View the active Registry (what Capabilities are bound to what).
 - Visualize the runtime topology (dependency graphs).
-- Pause, stop, and manage running Workers.
+- Suspend Rooms and pause, stop, or manage running Workers (acting as a Task Manager).
 
 ## Solon (The Toolchain)
 

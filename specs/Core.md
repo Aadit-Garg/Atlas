@@ -7,19 +7,17 @@ Core owns exactly one thing: **Execution Orchestration**.
 ## Responsibilities
 
 Core is strictly limited to:
+- **Global Registry Management:** Maintaining runtime facts.
+- **Room Stewardship:** Creating execution contexts and acting as the Steward inside those Rooms.
 - **Discovery:** Finding installed Workers and Models.
-- **Worker Registry:** Maintaining in-memory metadata about loaded Workers, exported Capabilities, and Roles.
-- **Resolution:** Matching requests for Capabilities to exported Capabilities from other Workers.
-- **Permission Negotiation:** Validating that a Worker is allowed to access the requested Capability.
-- **Session Establishment:** Creating the binding between the importing Worker and exporting Worker.
-- **Lifecycle:** Booting up Workers, managing their lifecycle states, and tearing them down gracefully.
+- **Resolution:** Matching Capability requests using metadata.
+- **Session Establishment:** Handling the 3 layers of communication (Communication, Transport, Translation).
+- **Lifecycle:** Managing states for Workers and Rooms.
 
 ## Anti-Responsibilities
 
 Core **MUST NOT**:
-- Store persistent data.
+- Store persistent business data.
 - Execute business logic or domain rules.
-- Route Data Plane messages (Events are routed directly between bound Workers).
-- Implement specific Capabilities.
-
-Core is entirely Platform Agnostic, meaning it does not care if a Worker is a database, an AI model, or a UI widget. It treats all Workers identically.
+- Guess or infer sharing (always follows Metadata).
+- Care about the programming language of the Worker.

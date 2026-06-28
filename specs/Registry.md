@@ -1,105 +1,31 @@
 # Registry
 
-Status: Draft
+The Registry in Atlas is split into two distinct tiers: The **Global Registry** and the **Room Registry**. 
 
-Version: 0.1
+Neither Registry is a database. They store **runtime facts only**. Nothing related to business state should ever exist inside a Registry.
 
----
+## 1. The Global Registry
+The Global Registry is the central source of truth for the entire Atlas Runtime. It tracks the macro-state of the platform.
 
-# Purpose
+**Stores:**
+- Running Workers
+- Running Rooms
+- Available Models
+- Capabilities
+- Health metrics
+- Global Bindings
 
-The Registry is Atlas' discovery mechanism.
+## 2. The Room Registry
+Every Room owns a local Registry, managed by the Room Steward. 
 
-It stores everything currently available inside the Runtime.
+The Room Registry functions as an **execution cache**. Workers inside the Room communicate through this local Registry rather than repeatedly querying the Global Registry, ensuring massive scalability and reducing locks.
 
----
-
-# Responsibilities
-
-The Registry tracks:
-
-Applications
-
-Modules
-
-Providers
-
-Capabilities
-
-Interfaces
-
-Events
-
-Widgets
-
-Commands
-
-Themes
-
----
-
-# Discovery
-
-During startup:
-
-Providers register.
-
-Modules register.
-
-Capabilities register.
-
-Applications register.
-
-The Runtime validates all registrations.
-
----
-
-# Lookups
-
-Components should discover dependencies through the Registry.
-
-Hardcoded references are prohibited.
-
----
-
-# Validation
-
-The Registry validates:
-
-Unique IDs
-
-Versions
-
-Compatibility
-
-Dependencies
-
-Permissions
-
----
-
-# Dynamic Registration
-
-Future versions may support:
-
-* Hot loading
-* Hot unloading
-* Runtime discovery
-
----
-
-# Design Rules
-
-The Registry is read-only for consumers.
-
-Only the Runtime may modify registrations.
-
----
-
-# Future
-
-Potential future additions:
-
-* Plugin Registry
-* Remote Registry
-* Marketplace Registry
+**Stores:**
+- Room Participants (Workers bound to the Room)
+- Participant Bindings
+- Communication Table (Header routing)
+- Transport Table (e.g., TCP, Unix Socket mapping)
+- Translation Table (e.g., Python to Rust serializers)
+- Active Invocations
+- Outstanding Requests & Pending Responses
+- Room-local lifecycle information and metrics

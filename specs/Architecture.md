@@ -1,37 +1,31 @@
 # Architecture
 
-Atlas employs a strictly segregated Control Plane vs Data Plane architecture.
+The Atlas Software Platform is built upon a strict, language-agnostic execution model.
 
-```text
-Solon Toolchain (Tooling)
-↓
-Models (Declarative Specs)
-↓
-Workers (Executable Implementations)
+```mermaid
+graph TD
+    PL[Programming Language<br/>Python, Rust, Zig]
+    AR[Atlas Runtime<br/>Control Plane]
+    W[Workers<br/>Execution]
+    P[Products<br/>User Experiences]
+    
+    PL -->|Implements| W
+    AR -->|Coordinates| W
+    W -->|Composes| P
 ```
 
-## 1. Solon
-Solon is the Atlas developer toolchain. It consumes **Models**, validates **Workers**, and generates tests, SDKs, and dependency graphs. It never runs in production.
+## 1. Solon Toolchain
+Solon is the Atlas developer toolchain. It validates Workers against Models *before* runtime, ensuring cross-language interoperability and generating necessary SDKs and test mocks.
 
 ## 2. Models
-Models are the ideal, tool-independent specifications that dictate how a Capability should behave, what events it fires, and what its schemas look like.
+Models are the ideal, tool-independent specifications (YAML/JSON) that dictate how a Capability should behave.
 
 ## 3. Workers
-Workers are the **ONLY** executable primitive. They implement Models. 
+Workers are the **ONLY** executable primitive. They implement Models. They execute **Invocations**.
 
-There is no distinction between an "Application", a "Provider", or a "Module". A Worker is simply an independent, executable package that can:
-- Export Capabilities (Services, Widgets, Events)
-- Import Capabilities
-- Manage its own state and storage
+## 4. The Runtime (Global Control Plane)
+The Atlas Runtime handles Discovery, the Global Registry, and Lifecycle coordination. 
+Atlas NEVER owns business state. Atlas NEVER guesses; it only executes declared intent.
 
-## 4. The Runtime (Control Plane)
-The Atlas Runtime is deliberately minimal. It handles:
-- **Discovery:** Finding installed Workers and Models.
-- **Resolution:** Matching Worker capability requests to Worker exports.
-- **Session/Binding:** Establishing permissions and creating the binding between two Workers.
-- **Lifecycle:** Starting and stopping Workers.
-
-Atlas **does not** broker messages, store application data, or execute business logic.
-
-## 5. The Data Plane
-Once Atlas binds two Workers together, they communicate directly via the established Session. Workers own their Data Plane.
+## 5. Rooms (Execution Contexts)
+When Workers collaborate, they do so inside a **Room**. A Room is not an application; it is a context managed by a **Room Steward** (Atlas). The Steward maintains a **Room Registry** (execution cache) and negotiates **Bindings** and **Sessions** over three independent layers: Communication, Transport, and Translation.

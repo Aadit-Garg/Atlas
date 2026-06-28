@@ -4,13 +4,13 @@ Capabilities represent the abstract functionality required by a Worker. They are
 
 ## Capability Resolution Flow
 
-When **Worker A** needs to save data, it doesn't import a specific database Worker. Instead:
-
-1. **Worker A** requests a Capability (e.g., `capability.storage.sql`).
-2. The Capability definition is defined in a **Model**.
-3. **Atlas Runtime** looks in the Registry for any **Worker B** that explicitly implements that Model/Capability.
-4. Atlas resolves the dependency, negotiates permissions, and creates a Session binding.
-5. Worker A communicates directly with Worker B via the returned binding.
+When **Worker A** needs to save data:
+1. **Worker A** emits a Header requesting the Capability (e.g., `capability.storage.sql`).
+2. **Atlas (Room Steward)** reads this Header and checks the Global Registry for any Worker exporting that Capability.
+3. Atlas decides (based purely on Metadata) whether to spawn a new Room or establish a direct Session within the current Room.
+4. Atlas handles the Transport and Translation layers.
+5. **Worker A** sends an **Invocation** over the Session.
+6. The target Worker executes the Invocation.
 
 ## Exports vs Imports
 
@@ -18,7 +18,7 @@ Workers explicitly declare what they provide and what they need in their Manifes
 
 - **Imports:** The Capabilities required to function.
 - **Exports:** 
-  - **Services:** RPC endpoints, classes, or direct invocation handles.
+  - **Services:** RPC endpoints or method invocations.
   - **Widgets:** UI components exposed for Atlas Studio.
-  - **Events:** Pub/sub channels that other Workers can subscribe to (negotiated by Atlas, but routed directly or via a message-broker Worker).
+  - **Events:** Subscribable triggers.
   - **Commands:** CLI actions.

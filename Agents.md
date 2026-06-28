@@ -358,6 +358,10 @@ Migration strategy
 
 Never introduce breaking architecture silently.
 
+**Phase 1 Architectural Freeze:** No new architectural concepts can be introduced during Phase 1. Bugs can lead to fixes, and implementation can clarify existing ideas, but if you discover something that requires inventing a new primitive (like another kind of runtime object alongside Workers), put it into a Future Ideas document for Atlas 2.0 instead of changing the foundation mid-build. That's how you avoid an architecture that never ships.
+
+**v1.0 Architecture Freeze (Strict Rule):** The core execution model is now considered frozen. The primitives are strictly limited to **Worker, Room, Session, Registry, Binding, and Invocation**. Any future architectural changes must go through a formal Architecture Decision Record (ADR) justifying why the existing primitives are insufficient.
+
 ---
 
 # Decision Making

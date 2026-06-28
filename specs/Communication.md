@@ -1,18 +1,30 @@
 # Communication
 
-Atlas separates the **Control Plane** from the **Data Plane**.
+Atlas completely separates communication into three independent layers. Atlas owns all three layers.
 
-## The Control Plane (Atlas)
-Atlas is responsible for discovery, compatibility validation, permission negotiation, session establishment, and binding.
+## The Three Layers
 
-Atlas **MUST NOT** become the message broker.
+1. **Communication (Who is talking)**
+   Defines the logical source and destination, governed by Models and capabilities.
+2. **Transport (How bytes move)**
+   The physical layer of data transfer. Supported transports remain pluggable (e.g., Shared Memory, TCP, Unix Sockets, Named Pipes, CAN, I2C). Future transports must be implementable without changing Worker APIs.
+3. **Translation (How runtimes understand each other)**
+   Because Atlas is language-neutral, Workers written in different languages require translation. Atlas manages the serialization/deserialization between language runtimes.
 
-## The Data Plane (Workers)
-Once Atlas successfully binds a Capability request from Worker A to a Capability exported by Worker B, **Workers communicate directly**.
+## Header-Based Routing
 
-### P2P Communication
-- **State Ownership:** Workers own their own business state and persistence.
-- **Direct Invocation:** Method calls, RPC, or direct memory exchanges happen directly between the established Session endpoints.
-- **Eventing:** If a Worker subscribes to an Event exported by another Worker, the subscription binding is negotiated by Atlas, but the delivery of the event is direct or handled via a dedicated `message-broker` Role Worker (not the Atlas kernel).
+Workers communicate by sending a **Header**. The Header describes the intent of the communication request. It may describe multiple requests simultaneously.
 
-This guarantees that the Atlas Runtime remains extremely small, fast, and unburdened by business data routing.
+**Example Header:**
+```yaml
+Required:
+  - capability.storage.database
+Optional:
+  - capability.analytics.telemetry
+```
+
+Atlas (the Room Steward) reads this metadata and decides whether to create a new Room for this collaboration, or simply create direct Sessions. **This decision is 100% metadata-driven and never heuristic.**
+
+## Sessions
+Sessions remain the fundamental communication primitive. **Rooms DO NOT replace Sessions.** 
+Workers use Sessions. Miron uses Sessions. Solon uses Sessions. Sessions exist *inside* Rooms.

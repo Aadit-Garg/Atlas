@@ -1,8 +1,8 @@
 # Worker Manifest Schema
 
-Every Worker must provide a `worker.yaml` file (or equivalent manifest) to declare its identity, Roles, Imports, and Exports.
+Every Worker must provide a `worker.yaml` file to declare its identity, Roles, execution policies, capabilities, and language implementation details.
 
-This replaces the older concepts of `module.yaml` and `provider.yaml`.
+There is exactly ONE canonical manifest format across the entire platform. Solon, Miron, Varsity, and the Runtime all consume this exact file.
 
 ## Schema Draft
 
@@ -11,32 +11,30 @@ version: "1.0"
 
 worker:
   id: string              # e.g. "atlas.worker.sqlite"
-  name: string            # Human readable name
-  version: string         # SemVer string
-  roles:                  # Metadata tags for Solon / Studio
-    - string              # e.g. "database", "storage", "manager"
+  name: string            
+  version: string         
+  language: string        # e.g. "python", "rust", "wasm"
+  roles:                  
+    - string              # e.g. "database", "storage"
 
-imports:                  # Capabilities this Worker requires
+execution:
+  policy: string          # e.g. "singleton", "pool"
+
+communication:
+  transports:             # Transports supported by this Worker
+    - string              # e.g. "shared_memory", "tcp"
+  serialization:          # Serializations supported
+    - string              # e.g. "json", "protobuf"
+
+imports:                  
   capabilities:
-    - name: string        # Capability identity (e.g., "storage.sql")
-      version: string     # Expected Model version
-      optional: boolean   # Default: false
-      reason: string      # Why it needs this
+    - name: string        
+      version: string     
+      optional: boolean   
+      reason: string      
 
-exports:                  # Capabilities this Worker provides
+exports:                  
   capabilities:
-    - name: string        # Capability identity
-      version: string     # Implemented Model version
-
-  widgets:                # UI components exported
-    - id: string
-      name: string
-
-  events:                 # Events this Worker publishes
-    - id: string
-      schema: string      # Reference to schema definition
+    - name: string        
+      version: string     
 ```
-
-## Validation
-
-The Solon toolchain uses this manifest to validate the Worker, generate mock tests for its imports, and ensure it correctly implements the Models for its exports. The Atlas Runtime uses this manifest during Boot for Discovery and Registration.
