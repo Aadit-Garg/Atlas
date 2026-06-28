@@ -1,8 +1,8 @@
 # Atlas
 
-![Atlas Hero Logo](docs/assets/logo_11.png)
+<img src="docs/assets/logo_11.png" alt="Atlas Hero Logo" width="250"/>
 
-**Documentation:** [https://aadit-garg.github.io/Atlas/](https://aadit-garg.github.io/Atlas/)
+**Documentation:** [https://atlas-system-suite.github.io/Atlas/](https://atlas-system-suite.github.io/Atlas/)
 > **Atlas introduces a universal execution model for software through Workers.**
 
 Atlas is a software platform that sits precisely between programming languages and user products. Where programming languages express computation, Atlas expresses software architecture.

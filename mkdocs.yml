@@ -1,6 +1,6 @@
 site_name: Atlas Software Platform
 site_description: A modular, language-independent software platform.
-repo_url: https://github.com/Aadit-Garg/Atlas
+repo_url: https://github.com/atlas-system-suite/Atlas
 
 theme:
   name: material
