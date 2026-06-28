@@ -15,14 +15,14 @@ Scaffold a new Atlas project.
 | `worker` | A new Worker with manifest, implementation, tests, and README |
 | `model` | A new Model with abstract contract and compliance tests |
 | `adapter` | A new Adapter (Translator) with manifest and conversion stub |
-| `product` | A new Product with composition builder and configuration |
+| `manager` | A new Manager with composition builder and configuration |
 
 **Examples:**
 ```bash
 atlas new worker my_logger
 atlas new model storage_model
 atlas new adapter json_to_yaml
-atlas new product notes_app
+atlas new manager notes_app
 ```
 
 ---
@@ -65,7 +65,7 @@ atlas doctor
 
 ### `atlas validate`
 
-Validate a Worker or Product manifest against the Atlas schema.
+Validate a Worker or Manager manifest against the Atlas schema.
 
 Checks for:
 - Missing required fields
@@ -82,7 +82,7 @@ atlas validate --manifest path/to/manifest.yaml
 
 ### `atlas inspect`
 
-Pretty-print a summary of a Worker or Product.
+Pretty-print a summary of a Worker or Manager.
 
 Shows:
 - ID, Name, Version, Language, Roles

@@ -32,7 +32,7 @@ Location: application root or path specified by `ATLAS_CONFIG` environment varia
 atlas:
   version: "0.1.0"               # Atlas configuration schema version
   name: "My LifeOS"              # Application display name
-  environment: "development"      # development | testing | production
+  environment: "development"      # development | testing | managerion
 
 runtime:
   log_level: "info"              # debug | info | warning | error | critical
@@ -119,7 +119,7 @@ Nested keys use double underscore as separator.
 
 Examples:
 
-* `ATLAS_ENV=production` → `atlas.environment`
+* `ATLAS_ENV=managerion` → `atlas.environment`
 * `ATLAS_RUNTIME__LOG_LEVEL=debug` → `runtime.log_level`
 * `ATLAS_STORAGE__PROVIDER=postgres` → `storage.provider`
 * `ATLAS_AI__ENABLED=false` → `ai.enabled`
@@ -195,7 +195,7 @@ Atlas supports multiple configuration profiles through file naming:
 * `atlas.yaml` — default
 * `atlas.development.yaml` — development overrides
 * `atlas.testing.yaml` — testing overrides
-* `atlas.production.yaml` — production overrides
+* `atlas.managerion.yaml` — managerion overrides
 
 The active profile is determined by `atlas.environment` or `ATLAS_ENV`.
 

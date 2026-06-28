@@ -1,5 +1,7 @@
+from rich.console import Console
+console = Console()
 """
-atlas inspect — Inspect an Atlas Worker or Product.
+atlas inspect — Inspect an Atlas Worker or Manager.
 """
 
 import yaml
@@ -11,47 +13,47 @@ def handle_inspect(args):
     manifest_path = args.manifest
 
     if not os.path.exists(manifest_path):
-        print(f"❌ Manifest not found: {manifest_path}")
+        console.print(f"❌ Manifest not found: {manifest_path}")
         sys.exit(1)
 
     with open(manifest_path, "r") as f:
         manifest = yaml.safe_load(f)
 
-    print("🔎 Atlas Inspector\n")
-    print(f"   ID:       {manifest.get('id', 'N/A')}")
-    print(f"   Name:     {manifest.get('name', 'N/A')}")
-    print(f"   Version:  {manifest.get('version', 'N/A')}")
-    print(f"   Language:  {manifest.get('language', 'N/A')}")
-    print(f"   Roles:     {', '.join(manifest.get('roles', []))}")
+    console.print("🔎 Atlas Inspector\n")
+    console.print(f"   ID:       {manifest.get('id', 'N/A')}")
+    console.print(f"   Name:     {manifest.get('name', 'N/A')}")
+    console.print(f"   Version:  {manifest.get('version', 'N/A')}")
+    console.print(f"   Language:  {manifest.get('language', 'N/A')}")
+    console.print(f"   Roles:     {', '.join(manifest.get('roles', []))}")
 
     execution = manifest.get("execution", {})
-    print(f"   Policy:    {execution.get('policy', 'N/A')}")
-    print()
+    console.print(f"   Policy:    {execution.get('policy', 'N/A')}")
+    console.print()
 
     exports = manifest.get("exports", [])
     if exports:
-        print("   📤 Exported Capabilities:")
+        console.print("   📤 Exported Capabilities:")
         for e in exports:
             if isinstance(e, dict):
-                print(f"      - {e.get('capability', '?')} v{e.get('version', '?')}")
+                console.print(f"      - {e.get('capability', '?')} v{e.get('version', '?')}")
             else:
-                print(f"      - {e}")
+                console.print(f"      - {e}")
 
     imports = manifest.get("imports", [])
     if imports:
-        print("   📥 Required Capabilities:")
+        console.print("   📥 Required Capabilities:")
         for i in imports:
             if isinstance(i, dict):
-                print(f"      - {i.get('capability', '?')}")
+                console.print(f"      - {i.get('capability', '?')}")
             else:
-                print(f"      - {i}")
+                console.print(f"      - {i}")
 
     translations = manifest.get("translations", [])
     if translations:
-        print("   🔄 Translations:")
+        console.print("   🔄 Translations:")
         for t in translations:
             if isinstance(t, dict):
-                print(f"      - {t.get('source_format', '?')} → {t.get('target_format', '?')} (cost: {t.get('cost', '?')})")
+                console.print(f"      - {t.get('source_format', '?')} → {t.get('target_format', '?')} (cost: {t.get('cost', '?')})")
 
     if not exports and not imports and not translations:
-        print("   ℹ️  No capabilities, imports, or translations declared.")
+        console.print("   ℹ️  No capabilities, imports, or translations declared.")

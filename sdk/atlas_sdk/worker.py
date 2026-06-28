@@ -197,7 +197,7 @@ class WorkerBase(ABC):
     def generate_manifest(self) -> Dict[str, Any]:
         """
         Auto-generates a Worker Manifest dictionary from the class metadata
-        and decorators. This can be written to a manifest.yaml file.
+        and decorators. This can be written to a atlas.yaml file.
         """
         meta = self.get_meta()
         cls = self.__class__
@@ -227,7 +227,7 @@ class WorkerBase(ABC):
         }
         return manifest
 
-    def write_manifest(self, path: str = "manifest.yaml") -> str:
+    def write_manifest(self, path: str = "atlas.yaml") -> str:
         """Generates and writes the manifest to a YAML file."""
         manifest = self.generate_manifest()
         with open(path, "w") as f:

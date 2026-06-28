@@ -2,7 +2,7 @@
 
 This document defines the foundational laws of the Atlas Software Platform.
 
-Every architectural decision, every runtime implementation, and every product built upon Atlas must adhere to these principles. If an implementation violates these rules, it is invalid.
+Every architectural decision, every runtime implementation, and every manager built upon Atlas must adhere to these principles. If an implementation violates these rules, it is invalid.
 
 ## 1. Atlas Coordinates. Workers Execute.
 Atlas is a Control Plane. It discovers, binds, and manages lifecycles. It never executes business logic. **Workers** are the only executable primitives. 

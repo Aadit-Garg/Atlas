@@ -9,7 +9,7 @@ Atlas is designed to be a universal execution platform. Because the architecture
 We envision a future where Atlas powers:
 
 ### 1. Personal Operating Systems & Desktop Software
-Products like **Life** (the reference manager) run locally, managing personal data, journals, and schedules with absolute privacy. Workers can be installed like mobile apps to extend the system's capabilities.
+Managers like **Life** (the reference manager) run locally, managing personal data, journals, and schedules with absolute privacy. Workers can be installed like mobile apps to extend the system's capabilities.
 
 ### 2. Robotics & Embedded Systems
 Because Atlas separates the Control Plane from the Data Plane, the core Runtime is lightweight enough to run on embedded hardware. A robot's vision system, motor controllers, and decision-making AI can all be modeled as independent Workers, dynamically bound at runtime.
@@ -18,7 +18,7 @@ Because Atlas separates the Control Plane from the Data Plane, the core Runtime 
 Workers are not inherently tied to a single machine. The Capability resolution system can theoretically resolve a Capability over a network. A Worker running locally could bind to an AI Worker running in the cloud, with Atlas handling the session negotiation seamlessly.
 
 ### 4. Developer Tools & Ecosystems
-By standardizing how software components describe themselves (Models) and execute (Workers), Atlas enables an entirely new class of developer tooling. The Studio Suite is just the beginning. Entire marketplaces can exist where developers trade, sell, and compose Workers to build products in minutes instead of months.
+By standardizing how software components describe themselves (Models) and execute (Workers), Atlas enables an entirely new class of developer tooling. The Studio Suite is just the beginning. Entire marketplaces can exist where developers trade, sell, and compose Workers to build managers in minutes instead of months.
 
 ## A Multi-Language Future
 

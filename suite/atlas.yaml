@@ -1,0 +1,11 @@
+kind: suite
+id: atlas.system_suite
+name: Atlas System Suite
+aliases:
+  - suite
+managers:
+  - studio
+  - miron
+  - solon
+  - varsity
+  - package

@@ -72,7 +72,7 @@ Business logic.
 
 Apps
 
-Products.
+Managers.
 
 SDK
 

@@ -15,6 +15,6 @@ class SDKConfig:
     default_language: str = "python"
     template_dir: Optional[str] = None
     package_output_dir: str = "dist"
-    manifest_filename: str = "manifest.yaml"
-    product_filename: str = "product.yaml"
+    manifest_filename: str = "atlas.yaml"
+    manager_filename: str = "atlas.yaml"
     test_runner: str = "pytest"

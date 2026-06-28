@@ -1,0 +1,6 @@
+kind: worker
+
+worker:
+  name: "Invalid Dummy"
+  version: "1.0"
+  # Missing ID and Language and Roles

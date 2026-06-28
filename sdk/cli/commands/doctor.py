@@ -8,65 +8,75 @@ import importlib
 
 
 def handle_doctor(args):
-    print("🩺 Atlas Doctor — Checking your environment...\n")
+    from rich.console import Console
+    from rich.table import Table
+    from rich.panel import Panel
+    from rich.text import Text
+    
+    console = Console()
+    
+    table = Table(title="Atlas Environment Checks", show_header=True, header_style="bold magenta")
+    table.add_column("Component", style="cyan", width=20)
+    table.add_column("Status", width=10)
+    table.add_column("Details")
 
     issues = 0
 
     # 1. Python version
     major, minor = sys.version_info[:2]
     if major >= 3 and minor >= 13:
-        print(f"   ✅ Python {major}.{minor} (>= 3.13 required)")
+        table.add_row("Python", "[green]✅ PASS[/green]", f"{major}.{minor} (>= 3.13 required)")
     else:
-        print(f"   ❌ Python {major}.{minor} — Atlas requires >= 3.13")
+        table.add_row("Python", "[red]❌ FAIL[/red]", f"{major}.{minor} (>= 3.13 required)")
         issues += 1
 
     # 2. PyYAML
     try:
         import yaml
-        print(f"   ✅ PyYAML {yaml.__version__}")
+        table.add_row("PyYAML", "[green]✅ PASS[/green]", f"v{yaml.__version__}")
     except ImportError:
-        print("   ❌ PyYAML not installed (pip install pyyaml)")
+        table.add_row("PyYAML", "[red]❌ FAIL[/red]", "Not installed (pip install pyyaml)")
         issues += 1
 
     # 3. Pydantic
     try:
         import pydantic
-        print(f"   ✅ Pydantic {pydantic.__version__}")
+        table.add_row("Pydantic", "[green]✅ PASS[/green]", f"v{pydantic.__version__}")
     except ImportError:
-        print("   ❌ Pydantic not installed (pip install pydantic)")
+        table.add_row("Pydantic", "[red]❌ FAIL[/red]", "Not installed (pip install pydantic)")
         issues += 1
 
     # 4. pytest
     try:
         import pytest
-        print(f"   ✅ pytest {pytest.__version__}")
+        table.add_row("pytest", "[green]✅ PASS[/green]", f"v{pytest.__version__}")
     except ImportError:
-        print("   ⚠️  pytest not installed (pip install pytest)")
+        table.add_row("pytest", "[yellow]⚠️ WARN[/yellow]", "Not installed (pip install pytest)")
 
     # 5. Atlas SDK
     try:
         import atlas_sdk
-        print(f"   ✅ Atlas SDK {atlas_sdk.__version__}")
+        table.add_row("Atlas SDK", "[green]✅ PASS[/green]", getattr(atlas_sdk, "__version__", "Found"))
     except ImportError:
-        print("   ⚠️  Atlas SDK not on PYTHONPATH")
+        table.add_row("Atlas SDK", "[yellow]⚠️ WARN[/yellow]", "Not on PYTHONPATH")
 
     # 6. Atlas Runtime
     try:
-        from atlas.core.runtime import AtlasRuntime
-        print("   ✅ Atlas Runtime found")
+        from runtime.atlas.core.runtime import AtlasRuntime
+        table.add_row("Atlas Runtime", "[green]✅ PASS[/green]", "Found")
     except ImportError:
-        print("   ⚠️  Atlas Runtime not on PYTHONPATH (optional for SDK-only development)")
+        table.add_row("Atlas Runtime", "[yellow]⚠️ WARN[/yellow]", "Not on PYTHONPATH (optional)")
 
     # 7. Manifest check
-    if os.path.exists("manifest.yaml"):
-        print("   ✅ manifest.yaml found in current directory")
-    elif os.path.exists("product.yaml"):
-        print("   ✅ product.yaml found in current directory")
+    if os.path.exists("atlas.yaml"):
+        table.add_row("Manifest", "[green]✅ PASS[/green]", "atlas.yaml found in current directory")
     else:
-        print("   ℹ️  No manifest found (run `atlas new worker my_worker` to get started)")
+        table.add_row("Manifest", "[cyan]ℹ️ INFO[/cyan]", "No manifest found (run `atlas new`)")
 
-    print()
+    console.print(table)
+    console.print()
+
     if issues == 0:
-        print("🎉 All checks passed! Your environment is ready for Atlas development.")
+        console.print(Panel("[bold green]🎉 All checks passed! Your environment is ready for Atlas development.[/bold green]", expand=False))
     else:
-        print(f"⚠️  {issues} issue(s) found. Please fix them before continuing.")
+        console.print(Panel(f"[bold red]⚠️ {issues} issue(s) found. Please fix them before continuing.[/bold red]", expand=False))

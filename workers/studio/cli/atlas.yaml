@@ -1,0 +1,14 @@
+kind: worker
+id: atlas.studio.cli
+name: Atlas Studio CLI Worker
+version: 1.0.0
+description: Implements the Studio CLI and TUI for workspace management.
+language: python
+roles: [cli, ui]
+
+execution:
+  policy: singleton
+
+exports:
+  - capability: studio.cli.execute
+  - capability: studio.tui.launch

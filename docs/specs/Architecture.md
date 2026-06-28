@@ -7,7 +7,7 @@ graph TD
     PL[Programming Language<br/>Python, Rust, Zig]
     AR[Atlas Runtime<br/>Control Plane]
     W[Workers<br/>Execution]
-    P[Products<br/>User Experiences]
+    P[Managers<br/>User Experiences]
     
     PL -->|Implements| W
     AR -->|Coordinates| W

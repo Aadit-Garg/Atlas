@@ -10,9 +10,9 @@ import sys
 def handle_build(args):
     from atlas_sdk.packaging import PackageBuilder, PackageSpec
 
-    manifest_path = "manifest.yaml"
+    manifest_path = "atlas.yaml"
     if not os.path.exists(manifest_path):
-        print(f"❌ No manifest.yaml found in current directory.")
+        print(f"❌ No atlas.yaml found in current directory.")
         sys.exit(1)
 
     with open(manifest_path, "r") as f:

@@ -139,7 +139,7 @@ Storage seems fundamental. Why not bake it into Core?
 Because "where data lives" is an infrastructure decision, not a framework decision.
 
 * During development → SQLite file
-* In production → PostgreSQL
+* In managerion → PostgreSQL
 * For a spreadsheet user → Google Sheets
 * In the cloud → Atlas Cloud
 
@@ -203,7 +203,7 @@ So: async internally, sync wrappers for convenience. Best of both worlds.
 
 ## Common Misconceptions
 
-### "Atlas is a productivity app"
+### "Atlas is a managerivity app"
 
 No. Atlas is a framework. LifeOS is an app built with Atlas.
 

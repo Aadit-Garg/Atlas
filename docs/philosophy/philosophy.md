@@ -2,7 +2,7 @@
 
 ## What is Atlas?
 
-Atlas is a software platform that sits precisely between programming languages and user products. 
+Atlas is a software platform that sits precisely between programming languages and user managers. 
 
 Where a programming language expresses pure computation, Atlas expresses software architecture. It provides a universal execution model for defining, binding, and executing software components (Workers) safely and consistently.
 
@@ -21,7 +21,7 @@ Atlas exists to solve the architectural scaling problem before it begins. It pro
 Atlas solves the **integration problem**. By forcing every piece of executable code into a standalone "Worker" and forcing those Workers to communicate strictly through defined "Models", Atlas ensures that:
 - You can swap out a database, an AI engine, or a UI widget without rewriting the consumer.
 - You can test any component in absolute isolation.
-- You can compose entire products out of pre-built, reusable pieces.
+- You can compose entire managers out of pre-built, reusable pieces.
 
 ## Why Workers?
 
@@ -39,7 +39,7 @@ Without Models, Workers would have to guess how to talk to each other. Models ar
 
 A framework (like Django, Spring, or Next.js) dictates how you build a specific type of application (usually a web app). Frameworks are incredibly opinionated about HTTP routing, HTML rendering, or database ORMs. 
 
-Atlas is not a framework because Atlas has no opinion on what you are building. It does not know what HTTP is. It does not know what a database is. Atlas provides the *substrate*. It is an execution platform upon which frameworks and products are built.
+Atlas is not a framework because Atlas has no opinion on what you are building. It does not know what HTTP is. It does not know what a database is. Atlas provides the *substrate*. It is an execution platform upon which frameworks and managers are built.
 
 ## What makes Atlas different?
 

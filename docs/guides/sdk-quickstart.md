@@ -104,7 +104,7 @@ This creates a deterministic `.atlas` package in the `dist/` directory, ready fo
 
 - **Build a Model**: `atlas new model my_storage_model`
 - **Build an Adapter**: `atlas new adapter json_to_msgpack`
-- **Compose a Product**: `atlas new product my_notes_app`
+- **Compose a Manager**: `atlas new manager my_notes_app`
 - **Read the full guide**: [Building Workers & Roles](building-workers.md)
 
 ---

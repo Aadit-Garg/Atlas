@@ -1,3 +1,5 @@
+from rich.console import Console
+console = Console()
 """
 atlas run — Run an Atlas application.
 """
@@ -11,37 +13,39 @@ def handle_run(args):
     manifest_path = args.manifest
 
     if not os.path.exists(manifest_path):
-        print(f"❌ Manifest not found: {manifest_path}")
-        print("   Are you in an Atlas project directory?")
+        console.print(f"[bold red]❌ Manifest not found:[/bold red] {manifest_path}")
+        console.print("   Are you in an Atlas project directory?")
         sys.exit(1)
 
     with open(manifest_path, "r") as f:
         manifest = yaml.safe_load(f)
 
     worker_name = manifest.get("name", manifest.get("id", "Unknown"))
-    print(f"🚀 Atlas Runtime — Starting '{worker_name}'")
-    print(f"   Manifest: {manifest_path}")
-    print(f"   Language: {manifest.get('language', 'python')}")
-    print(f"   Policy:   {manifest.get('execution', {}).get('policy', 'singleton')}")
-    print()
+    
+    from rich.panel import Panel
+    from rich.text import Text
+    
+    details = f"[cyan]Manifest:[/cyan] {manifest_path}\n"
+    details += f"[cyan]Language:[/cyan] {manifest.get('language', 'python')}\n"
+    details += f"[cyan]Policy:[/cyan]   {manifest.get('execution', {}).get('policy', 'singleton')}\n\n"
 
-    # For now, we print the manifest summary.
-    # Full runtime boot integration comes in a later sprint.
     exports = manifest.get("exports", [])
     imports = manifest.get("imports", [])
 
     if exports:
-        print("   📤 Exports:")
+        details += "[bold magenta]📤 Exports:[/bold magenta]\n"
         for e in exports:
             cap = e.get("capability", e) if isinstance(e, dict) else e
-            print(f"      - {cap}")
+            details += f"  - {cap}\n"
 
     if imports:
-        print("   📥 Imports:")
+        details += "[bold magenta]📥 Imports:[/bold magenta]\n"
         for i in imports:
             cap = i.get("capability", i) if isinstance(i, dict) else i
-            print(f"      - {cap}")
+            details += f"  - {cap}\n"
+            
+    details += "\n[green]✅ Worker loaded successfully.[/green]\n"
+    details += "[yellow]ℹ️  Full runtime integration coming in Phase 2.[/yellow]"
 
-    print()
-    print("   ✅ Worker loaded successfully.")
-    print("   ℹ️  Full runtime integration coming in Phase 2.")
+    panel = Panel(details, title=f"[bold cyan]🚀 Atlas Runtime — Starting '{worker_name}'[/bold cyan]", expand=False, border_style="blue")
+    console.print(panel)

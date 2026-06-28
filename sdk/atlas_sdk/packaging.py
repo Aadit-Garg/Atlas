@@ -6,7 +6,7 @@ Defines the .atlas package format and provides utilities for
 building and reading packages.
 
 An .atlas package is a ZIP archive containing:
-    manifest.yaml       — The worker/product manifest
+    atlas.yaml       — The worker/manager manifest
     src/                — Source code
     assets/             — Static assets
     docs/               — Documentation
@@ -43,7 +43,7 @@ class PackageBuilder:
             name="my-worker",
             version="1.0.0",
             source_dir="src/",
-            manifest_path="manifest.yaml",
+            manifest_path="atlas.yaml",
         ))
         path = builder.build()
     """
@@ -63,8 +63,8 @@ class PackageBuilder:
         with zipfile.ZipFile(output_path, 'w', zipfile.ZIP_DEFLATED) as zf:
             # 1. Manifest
             if os.path.exists(self.spec.manifest_path):
-                zf.write(self.spec.manifest_path, "manifest.yaml")
-                checksums["manifest.yaml"] = self._hash_file(self.spec.manifest_path)
+                zf.write(self.spec.manifest_path, "atlas.yaml")
+                checksums["atlas.yaml"] = self._hash_file(self.spec.manifest_path)
 
             # 2. Source
             if os.path.isdir(self.spec.source_dir):
@@ -126,7 +126,7 @@ class PackageReader:
         """Returns metadata about the package."""
         with zipfile.ZipFile(self.path, 'r') as zf:
             names = zf.namelist()
-            has_manifest = "manifest.yaml" in names
+            has_manifest = "atlas.yaml" in names
             has_checksums = "checksums.sha256" in names
             src_files = [n for n in names if n.startswith("src/")]
             asset_files = [n for n in names if n.startswith("assets/")]

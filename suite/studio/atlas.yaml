@@ -1,0 +1,12 @@
+kind: manager
+id: atlas.studio
+name: Atlas Studio
+aliases:
+  - studio
+workers:
+  - id: atlas.core.logger
+    entry_point: false
+  - id: atlas.core.config
+    entry_point: false
+  - id: atlas.studio.cli
+    entry_point: true

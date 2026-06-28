@@ -7,7 +7,15 @@ requires-python = ">=3.13"
 dependencies = [
     "PyYAML>=6.0.1",
     "pydantic>=2.7.0",
+    "rich>=13.0.0",
 ]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["runtime*", "sdk*", "workers*"]
 
 [project.scripts]
 atlas = "sdk.cli.main:main"
@@ -30,5 +38,5 @@ pythonVersion = "3.13"
 typeCheckingMode = "strict"
 
 [tool.pytest.ini_options]
-testpaths = ["tests"]
+testpaths = ["runtime/tests", "workers", "sdk"]
 asyncio_mode = "auto"

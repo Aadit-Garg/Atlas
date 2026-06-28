@@ -58,7 +58,7 @@ Atlas is:
 
 Platform First
 
-Product Second
+Manager Second
 
 Features Third
 

@@ -1,3 +1,5 @@
+from rich.console import Console
+console = Console()
 """
 atlas clean — Clean build artifacts.
 """
@@ -11,13 +13,13 @@ CLEAN_PATTERNS = [".pyc", ".pyo"]
 
 
 def handle_clean(args):
-    print("🧹 Cleaning build artifacts...\n")
+    console.print("🧹 Cleaning build artifacts...\n")
 
     removed = 0
     for dirname in CLEAN_DIRS:
         if os.path.exists(dirname):
             shutil.rmtree(dirname)
-            print(f"   🗑️  Removed {dirname}/")
+            console.print(f"   🗑️  Removed {dirname}/")
             removed += 1
 
     # Walk current directory for __pycache__ dirs
@@ -26,10 +28,10 @@ def handle_clean(args):
             if d == "__pycache__":
                 path = os.path.join(root, d)
                 shutil.rmtree(path)
-                print(f"   🗑️  Removed {path}")
+                console.print(f"   🗑️  Removed {path}")
                 removed += 1
 
     if removed == 0:
-        print("   ✨ Nothing to clean!")
+        console.print("   ✨ Nothing to clean!")
     else:
-        print(f"\n   Cleaned {removed} artifact(s).")
+        console.print(f"\n   Cleaned {removed} artifact(s).")

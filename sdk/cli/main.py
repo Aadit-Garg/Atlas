@@ -30,10 +30,11 @@ def create_parser() -> argparse.ArgumentParser:
     new_parser = subparsers.add_parser("new", help="Scaffold a new Atlas project")
     new_parser.add_argument(
         "type",
-        choices=["worker", "model", "adapter", "product"],
+        nargs="?",
+        choices=["worker", "model", "adapter", "manager"],
         help="Type of project to create",
     )
-    new_parser.add_argument("name", help="Name of the project")
+    new_parser.add_argument("name", nargs="?", help="Name of the project")
     new_parser.add_argument(
         "--template", default=None, help="Template variant to use"
     )
@@ -41,7 +42,7 @@ def create_parser() -> argparse.ArgumentParser:
     # --- atlas run ---
     run_parser = subparsers.add_parser("run", help="Run the Atlas application")
     run_parser.add_argument(
-        "--manifest", default="manifest.yaml", help="Path to the manifest file"
+        "--manifest", default="atlas.yaml", help="Path to the manifest file"
     )
 
     # --- atlas test ---
@@ -56,13 +57,13 @@ def create_parser() -> argparse.ArgumentParser:
     # --- atlas validate ---
     validate_parser = subparsers.add_parser("validate", help="Validate manifests")
     validate_parser.add_argument(
-        "--manifest", default="manifest.yaml", help="Path to manifest"
+        "--manifest", default="atlas.yaml", help="Path to manifest"
     )
 
     # --- atlas inspect ---
-    inspect_parser = subparsers.add_parser("inspect", help="Inspect a Worker or Product")
+    inspect_parser = subparsers.add_parser("inspect", help="Inspect a Worker or Manager")
     inspect_parser.add_argument(
-        "--manifest", default="manifest.yaml", help="Path to manifest"
+        "--manifest", default="atlas.yaml", help="Path to manifest"
     )
 
     # --- atlas info ---
@@ -82,13 +83,24 @@ def create_parser() -> argparse.ArgumentParser:
 
 def main():
     parser = create_parser()
-    args = parser.parse_args()
+    
+    # Fast-path for artifact discovery if command isn't a known primitive
+    # The known commands from argparse:
+    known_commands = {"new", "run", "test", "doctor", "validate", "inspect", "info", "clean", "build"}
+    
+    if len(sys.argv) > 1 and sys.argv[1] not in known_commands and not sys.argv[1].startswith("-"):
+        # Treat sys.argv[1] as a manager alias and bypass argparse
+        class DummyArgs:
+            pass
+        args = DummyArgs()
+        args.command = sys.argv[1]
+    else:
+        args = parser.parse_args()
 
-    if args.command is None:
+    if getattr(args, "command", None) is None:
         parser.print_help()
         sys.exit(0)
 
-    # Import and dispatch to the appropriate command handler
     if args.command == "new":
         from .commands.new import handle_new
         handle_new(args)
@@ -117,8 +129,64 @@ def main():
         from .commands.build import handle_build
         handle_build(args)
     else:
-        parser.print_help()
-        sys.exit(1)
+        # Artifact Discovery Fallback
+        # The command is not a primitive command. Let's see if it's a manager alias.
+        import os
+        from sdk.atlas_sdk.discovery import DiscoveryEngine
+        import importlib.util
+        from rich.console import Console
+        console = Console()
+        
+        # We need the atlas root directory to start crawling.
+        # sdk/cli/main.py -> sdk/cli -> sdk -> atlas
+        atlas_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+        engine = DiscoveryEngine(atlas_root)
+        
+        manager_info = engine.find_manager_by_alias(args.command)
+        if not manager_info:
+            console.print(f"[bold red]❌ Unknown command or manager:[/bold red] [yellow]{args.command}[/yellow]")
+            parser.print_help()
+            sys.exit(1)
+            
+        # We found a manager! Boot it up.
+        manager_dir = manager_info["path"]
+        main_script = os.path.join(manager_dir, "main.py")
+        
+        if not os.path.isfile(main_script):
+            console.print(f"[bold red]❌ Error:[/bold red] Manager '{args.command}' discovered, but missing main.py entry point at {manager_dir}")
+            sys.exit(1)
+            
+        # Ensure atlas root is in path
+        if atlas_root not in sys.path:
+            sys.path.insert(0, atlas_root)
+            
+        console.print(f"[bold cyan]🚀 Launching {manager_info['manifest'].get('name', args.command)}...[/bold cyan]")
+        
+        # Dynamically load and execute
+        module_name = f"atlas.dynamic_manager.{args.command}.main"
+        spec = importlib.util.spec_from_file_location(module_name, main_script)
+        if spec and spec.loader:
+            module = importlib.util.module_from_spec(spec)
+            sys.modules[module_name] = module
+            try:
+                spec.loader.exec_module(module)
+                if hasattr(module, "main"):
+                    # Pass the rest of the arguments to the manager's main function
+                    module.main(sys.argv[2:])
+                else:
+                    console.print(f"[bold red]❌ Error:[/bold red] Manager '{args.command}' missing main() function in {main_script}")
+                    sys.exit(1)
+            except KeyboardInterrupt:
+                console.print(f"\n[bold yellow]👋 Exited {args.command}.[/bold yellow]")
+                sys.exit(0)
+            except Exception as e:
+                console.print(f"[bold red]❌ Error executing manager '{args.command}':[/bold red] {e}")
+                from rich.traceback import install
+                install(show_locals=False)
+                raise
+        else:
+            console.print(f"[bold red]❌ Error:[/bold red] Failed to load module {main_script}")
+            sys.exit(1)
 
 
 if __name__ == "__main__":

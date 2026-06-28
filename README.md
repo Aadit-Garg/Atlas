@@ -5,7 +5,7 @@
 **Documentation:** [https://atlas-system-suite.github.io/Atlas/](https://atlas-system-suite.github.io/Atlas/)
 > **Atlas introduces a universal execution model for software through Workers.**
 
-Atlas is a software platform that sits precisely between programming languages and user products. Where programming languages express computation, Atlas expresses software architecture.
+Atlas is a software platform that sits precisely between programming languages and user managers. Where programming languages express computation, Atlas expresses software architecture.
 
 ---
 
@@ -15,7 +15,7 @@ Large applications inevitably become difficult to manage because:
 - Everything becomes tightly coupled.
 - Plugin systems are bolted on as afterthoughts and lack consistency.
 - Testing in isolation becomes nearly impossible.
-- Components aren't easily reusable across different products.
+- Components aren't easily reusable across different managers.
 - Communication between features becomes ad-hoc and untrackable.
 
 Atlas solves this by introducing **Workers** and **Models**. By forcing all executable code into strictly bound Workers, Atlas guarantees absolute modularity.
@@ -55,7 +55,7 @@ Programming Language
          ↓
       Workers
          ↓
-      Products
+      Managers
 ```
 
 ---

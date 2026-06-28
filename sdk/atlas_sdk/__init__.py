@@ -44,10 +44,10 @@ from .adapter import (
     TranslationMeta,
 )
 
-# Product SDK
-from .product import (
-    ProductBuilder,
-    ProductManifest,
+# Manager SDK
+from .manager import (
+    ManagerBuilder,
+    ManagerManifest,
     WorkerRef,
 )
 
@@ -80,8 +80,8 @@ __all__ = [
     "ModelBase", "model_version",
     # Adapter
     "AdapterBase", "translation", "TranslationMeta",
-    # Product
-    "ProductBuilder", "ProductManifest", "WorkerRef",
+    # Manager
+    "ManagerBuilder", "ManagerManifest", "WorkerRef",
     # Testing
     "MockRuntime", "TestHarness",
     "assert_capability_exported", "assert_invocation_handled", "assert_model_compliant",
