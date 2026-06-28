@@ -116,6 +116,16 @@ class InvocationStateError(AtlasError):
     def __init__(self, message: str, context: Optional[Dict[str, str]] = None):
         super().__init__(code="ERR_INVOCATION_STATE", severity=Severity.RECOVERABLE, message=message, context=context or {})
 
+class RoomStateError(AtlasError):
+    """Raised when an illegal room lifecycle transition is attempted."""
+    def __init__(self, message: str, context: Optional[Dict[str, str]] = None):
+        super().__init__(code="ERR_ROOM_STATE", severity=Severity.RECOVERABLE, message=message, context=context or {})
+
+class RoomLimitExceededError(AtlasError):
+    """Raised when a room limit (e.g. depth, participant count) is exceeded."""
+    def __init__(self, message: str, context: Optional[Dict[str, str]] = None):
+        super().__init__(code="ERR_ROOM_LIMIT", severity=Severity.RECOVERABLE, message=message, context=context or {})
+
 
 
 # ---------------------------------------------------------
