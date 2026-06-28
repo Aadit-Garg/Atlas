@@ -1,0 +1,29 @@
+worker:
+  id: "atlas.test.dummy"
+  name: "dummy"
+  version: "1.0.0"
+  language: "python"
+  roles:
+    - "test"
+    - "storage"
+
+execution:
+  policy: "pool"
+
+communication:
+  transports:
+    - "tcp"
+  serialization:
+    - "json"
+
+imports:
+  capabilities:
+    - name: "capability.logger"
+      version: "1.0"
+      optional: true
+      reason: "To log stuff"
+
+exports:
+  capabilities:
+    - name: "capability.storage.test"
+      version: "1.0"
