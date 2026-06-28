@@ -2,7 +2,7 @@
 
 > **Atlas is a modular framework for building Personal Operating Systems.**
 
-LifeOS is the first application built using Atlas.
+LifeOS is the first implementation built using Atlas.
 
 ## Fun Fact
 
@@ -23,14 +23,12 @@ The joke, however, became part of Atlas history.
 # What is Atlas?
 
 Atlas is not a productivity app.
-
 Atlas is not a habit tracker.
-
 Atlas is not a Google Sheets template.
 
 Atlas is a framework that allows developers to build highly customizable personal operating systems.
 
-An Atlas application can help users manage their health, finances, learning, projects, schedules, and personal knowledge while remaining completely modular and extensible.
+An Atlas implementation can help users manage their health, finances, learning, projects, schedules, and personal knowledge while remaining completely modular and extensible.
 
 ---
 
@@ -38,101 +36,53 @@ An Atlas application can help users manage their health, finances, learning, pro
 
 Atlas follows a few core principles:
 
-* Core should know as little as possible.
-* Everything is modular.
-* Everything external is a Provider.
-* Communication happens through Events.
-* Applications are built from Modules.
-* AI is a first-class citizen.
-* Storage is replaceable.
-* Local-first whenever possible.
-* Documentation is the source of truth.
+* **Atlas coordinates. Workers own.**
+* **Atlas owns execution. Workers own business state.**
+* **Atlas owns lifecycle. Workers own communication.**
+* **Atlas owns discovery. Workers own persistence.**
+* The Runtime should be as small as possible. Workers should be as smart as possible.
+* Favor tooling (Solon) over runtime magic.
+* Favor metadata over runtime logic.
 
 ---
 
 # Core Concepts
 
-## Core
+## Workers
+**Worker** is the ONLY executable primitive in Atlas. There is no architectural distinction between an "application", a "provider", or a "module". A Worker can be a database, a UI widget, an AI integration, or a full dashboard.
 
-The runtime that powers every Atlas application.
+## Models
+**Models** are the ideal, tool-independent specifications that Workers implement. Models are declarative blueprints that define what interfaces, schemas, and capabilities a Worker should provide or consume.
 
-## Modules
+## Solon
+**Solon** is the developer toolchain. It consumes Models to validate Workers, generate tests, and scaffold SDKs. Solon guarantees consistency without bloating the Runtime.
 
-Business functionality such as Health, Finance, Reading, Projects, Calendar, or Journal.
+## Atlas Core (The Control Plane)
+The Runtime that powers the framework. It handles Discovery, Lifecycle Management, and Session Binding. It explicitly does **not** route messages or store data.
 
-## Providers
-
-Interfaces to external systems such as SQLite, PostgreSQL, Google Sheets, Gemini, Claude, or Email.
-
-## Applications
-
-Complete products built using Atlas.
-
-Example:
-
-* LifeOS
-* StudentOS
-* CreatorOS
+## Roles
+Metadata tags attached to Workers (e.g., `manager`, `database`, `storage`, `ui`). Roles are consumed by tooling and documentation, but do not change runtime execution.
 
 ---
 
 # Repository Structure
 
-/specs
+`/specs`
+Engineering specifications. The absolute source of truth for the architecture.
 
-Engineering specifications.
+`/docs`
+Architectural deep-dives, historical context, and MKDocs site files.
 
-Source of truth.
-
----
-
-/packages
-
-Reusable framework packages.
-
----
-
-/runtime
-
-Atlas runtime and lifecycle.
-
----
-
-/modules
-
-Business modules.
-
----
-
-/providers
-
-External integrations.
-
----
-
-/apps
-
-Applications built using Atlas.
-
----
-
-/sdk
-
-Developer SDK.
-
----
-
-/tools
-
-Internal developer tooling.
+`/src`
+The implementation codebase (Control Plane, Solon Toolchain, etc.).
 
 ---
 
 # Current Goal
 
-Build Atlas Core.
+Validate the Atlas Architecture by building the Control Plane (Core).
 
-Once Atlas Core is stable, build LifeOS as the reference implementation.
+Once Atlas Core is stable, build LifeOS as the reference Manager Worker.
 
 ---
 
@@ -161,8 +111,8 @@ Atlas should eventually support:
 * Managed cloud deployments
 * Multiple storage providers
 * Multiple AI providers
-* Third-party modules
-* Community extensions
+* Third-party extensions
+* Community marketplaces
 
 ---
 
