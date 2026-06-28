@@ -1,0 +1,21 @@
+id: atlas.core.config
+name: Environment Config
+version: 1.0.0
+language: python
+roles: [config, core, stdlib]
+
+execution:
+  policy: singleton
+
+communication:
+  transports: [memory]
+  formats: [python]
+  default_format: python
+
+imports: []
+
+exports:
+  - capability: atlas.core.config
+    version: 1.0.0
+
+translations: []
