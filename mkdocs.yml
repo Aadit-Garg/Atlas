@@ -31,7 +31,9 @@ nav:
     - Vision: philosophy/vision.md
     - Studio Suite: studio-suite.md
   - Guides:
+    - SDK Quick Start: guides/sdk-quickstart.md
     - Building Workers & Roles: guides/building-workers.md
+    - CLI Reference: guides/cli-reference.md
   - Architecture (v1.0):
     - Execution Model: architecture/execution-model.md
     - Core Runtime: specs/Core.md
