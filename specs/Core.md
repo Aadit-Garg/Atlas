@@ -1,117 +1,25 @@
-# Core
+# Atlas Core
 
-Status: Draft
+Atlas Core is the framework kernel.
 
-Version: 0.1
+Core owns exactly one thing: **Execution Orchestration**.
 
----
+## Responsibilities
 
-# Purpose
+Core is strictly limited to:
+- **Discovery:** Finding installed Workers and Models.
+- **Worker Registry:** Maintaining in-memory metadata about loaded Workers, exported Capabilities, and Roles.
+- **Resolution:** Matching requests for Capabilities to exported Capabilities from other Workers.
+- **Permission Negotiation:** Validating that a Worker is allowed to access the requested Capability.
+- **Session Establishment:** Creating the binding between the importing Worker and exporting Worker.
+- **Lifecycle:** Booting up Workers, managing their lifecycle states, and tearing them down gracefully.
 
-Atlas Core is the foundation of the Atlas platform.
+## Anti-Responsibilities
 
-It provides the infrastructure required to execute Applications, Modules, and Providers.
+Core **MUST NOT**:
+- Store persistent data.
+- Execute business logic or domain rules.
+- Route Data Plane messages (Events are routed directly between bound Workers).
+- Implement specific Capabilities.
 
-Core contains no business logic.
-
----
-
-# Responsibilities
-
-Atlas Core is responsible for:
-
-* Runtime
-* Registry
-* Event Bus
-* Capability Resolution
-* Configuration
-* Lifecycle
-* Logging
-* Diagnostics
-* Scheduling
-
-Core coordinates execution.
-
-It does not implement features.
-
----
-
-# Public Components
-
-Atlas Core exposes:
-
-* Runtime
-* Event Bus
-* Registry
-* Capability Registry
-* Configuration Manager
-* Lifecycle Manager
-
-These are considered stable APIs.
-
----
-
-# Internal Components
-
-Internal implementation details are not accessible to Modules.
-
-Examples:
-
-* Internal caches
-* Boot helpers
-* Runtime internals
-* Dependency resolver
-
-Internal APIs may change without notice.
-
----
-
-# Dependency Rules
-
-Core depends on nothing except shared libraries.
-
-Modules depend on Core.
-
-Providers depend on Core.
-
-Applications depend on Core.
-
-Core must never depend on Modules.
-
-Core must never depend on Providers.
-
----
-
-# Stability
-
-Core APIs should remain stable.
-
-Breaking changes require:
-
-* Version increase
-* Migration guide
-* Deprecation period
-
----
-
-# Design Rules
-
-Core must be:
-
-* Minimal
-* Stable
-* Framework independent
-* Provider independent
-* Module independent
-* Testable
-
----
-
-# Future
-
-Future versions may include:
-
-* Distributed Runtime
-* Multi-process execution
-* Remote modules
-* Sandboxed plugins
+Core is entirely Framework Agnostic, meaning it does not care if a Worker is a database, an AI model, or a UI widget. It treats all Workers identically.

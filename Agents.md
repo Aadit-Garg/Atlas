@@ -70,6 +70,16 @@ Favor simple, obvious implementations that satisfy the architecture.
 
 Optimize only after the architecture has been validated by real applications.
 
+**New Architecture Principles:**
+- **Atlas coordinates. Workers own.**
+- **Atlas owns execution. Workers own business state.**
+- **Atlas owns lifecycle. Workers own communication.**
+- **Atlas owns discovery. Workers own persistence.**
+- **The Runtime should become smaller. Workers should become smarter.**
+- **Favor tooling (Solon) over runtime magic.**
+- **Favor metadata over runtime logic.**
+- **Never introduce a new abstraction unless it removes more complexity than it adds.**
+
 ---
 
 # Golden Rules

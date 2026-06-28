@@ -4,6 +4,20 @@
 
 LifeOS is the first application built using Atlas.
 
+## Fun Fact
+
+During Atlas' design, the Model system almost had a very different name.
+
+For roughly one design session it was internally called **Hookers**, because they "hooked" Workers to standardized behavior.
+
+That idea survived exactly until someone pointed out what "hooker" usually means in English.
+
+The name was immediately retired.
+
+Models were born.
+
+The joke, however, became part of Atlas history.
+
 ---
 
 # What is Atlas?

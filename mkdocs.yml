@@ -18,12 +18,18 @@ theme:
 
 nav:
   - Home: index.md
-  - Architecture: architecture.md
-  - Protocols: protocols.md
-  - Capabilities: capabilities.md
-  - Providers: providers.md
-  - Modules: modules.md
+  - Architecture:
+    - Overview: architecture.md
+    - Worker Lifecycle: architecture/worker-lifecycle.md
+    - Model System: architecture/model-system.md
+    - Resolution: architecture/resolution.md
+  - Workers: workers.md
+  - Models: models.md
+  - Roles: roles.md
+  - Communication: communication.md
   - Core: core.md
+  - History:
+    - Naming Evolution: history/naming.md
 
 plugins:
   - search

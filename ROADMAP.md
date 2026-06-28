@@ -1,20 +1,18 @@
 # Atlas Roadmap
 
-This document outlines the high-level roadmap for the Atlas framework.
+Atlas development is structured by framework milestones, not programming language choices.
 
----
+## Phase 0: Architecture Freeze (Complete)
 
-## Phase 0: Architecture & Specifications (Current)
+- [x] Establish Core Architecture
+- [x] Define Framework Specifications
+- [x] Produce Design ADRs
 
-- [x] Initial repository setup and licensing
-- [x] Core architecture specifications
-- [x] Engineering standards
-- [x] Technology decisions
-- [ ] Protocol interface definitions
-- [ ] Manifest and configuration schemas
-- [ ] Error handling specification
-- [ ] Architecture Decision Records
-- [ ] Repository restructuring
+## Phase 0.5: Worker Architecture Migration (Complete)
+
+- [x] Consolidate Application/Provider into Workers
+- [x] Introduce Models and Solon Toolchain
+- [x] Strip messaging/data plane responsibilities from Runtime
 
 ## Phase 1: Core Foundation
 
@@ -24,53 +22,21 @@ This document outlines the high-level roadmap for the Atlas framework.
 - [ ] Lifecycle Manager (state machine, transitions)
 - [ ] Registry (component registration, lookup, validation)
 
-## Phase 2: Core Runtime
+## Phase 2: Solon and Models
 
-- [ ] Event Bus (async pub/sub, error isolation)
-- [ ] Capability Registry (registration, resolution, binding)
-- [ ] Dependency Resolver (topological sort, circular detection)
-- [ ] Module/Provider Loader (manifest reading, lifecycle orchestration)
-- [ ] Runtime orchestrator (boot sequence)
+- [ ] Define precise Model schema format
+- [ ] Implement Solon CLI `validate` command
+- [ ] Implement Solon code generation hooks (Mocks, tests)
+- [ ] Implement Worker Manifest Parsing
 
-## Phase 3: First Capability
+## Phase 3: The Data Plane
 
-- [ ] Storage Protocol definition
-- [ ] SQLite Provider implementation
-- [ ] End-to-end Capability → Protocol → Provider validation
+- [ ] Design standard RPC / direct invocation protocols for Workers
+- [ ] Design direct eventing specifications
+- [ ] Create the first concrete Worker (e.g., SQLite Storage)
+- [ ] Create a testing Worker that imports the Storage Capability
 
-## Phase 4: First Module
+## Phase 4: Reference Manager
 
-- [ ] Module Protocol definition
-- [ ] Module Manager (discovery, lifecycle)
-- [ ] Reference Module (health check / ping)
-
-## Phase 5: MVP Providers
-
-- [ ] AI Protocol and first AI Provider (Gemini or OpenAI)
-- [ ] Notification Protocol and ConsoleNotification Provider
-- [ ] Validate provider architecture generalizes across capability types
-
-## Phase 6: SDK & CLI
-
-- [ ] SDK scaffolding tools (`atlas new module`, `atlas new provider`)
-- [ ] CLI application (boots Atlas, loads modules, demonstrates events)
-
-## Phase 7: LifeOS Reference Application
-
-- [ ] Health Module
-- [ ] Finance Module
-- [ ] Journal Module
-- [ ] LifeOS application assembly
-
----
-
-## Long-Term Vision
-
-- [ ] Desktop application support
-- [ ] Web application support
-- [ ] Mobile application support
-- [ ] Self-hosted deployments
-- [ ] Cloud deployments
-- [ ] Third-party module marketplace
-- [ ] Community extensions
-- [ ] Multiple AI provider ecosystem
+- [ ] Implement a minimal Manager Worker (Role: manager)
+- [ ] Validate end-to-end flow: Solon -> Manifests -> Control Plane -> Data Plane -> SQLite

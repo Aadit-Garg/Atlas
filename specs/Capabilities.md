@@ -1,224 +1,24 @@
 # Capabilities
 
-Status: Draft
+Capabilities represent the abstract functionality required by a Worker. They are the currency of dependency resolution in Atlas.
 
-Version: 0.1
+## Capability Resolution Flow
 
----
+When **Worker A** needs to save data, it doesn't import a specific database Worker. Instead:
 
-# Purpose
+1. **Worker A** requests a Capability (e.g., `capability.storage.sql`).
+2. The Capability definition is defined in a **Model**.
+3. **Atlas Runtime** looks in the Registry for any **Worker B** that explicitly implements that Model/Capability.
+4. Atlas resolves the dependency, negotiates permissions, and creates a Session binding.
+5. Worker A communicates directly with Worker B via the returned binding.
 
-Capabilities define **what Atlas can do**.
+## Exports vs Imports
 
-A Capability is a **runtime service identity** — a named, versioned service that the Capability Registry discovers, resolves, and injects.
+Workers explicitly declare what they provide and what they need in their Manifest:
 
-Capabilities are not code contracts. Code contracts are defined by Protocols (see Protocols.md).
-
-Capabilities are not implementations. Implementations are provided by Providers (see Providers.md).
-
-## Relationship to Protocols and Providers
-
-Capability (runtime service identity) → references → Protocol (code contract)
-
-Provider (implementation) → satisfies → Protocol
-
-Provider → registers for → Capability
-
-See ADR-002 for the rationale behind this separation.
-
-Modules consume Capabilities.
-
----
-
-# Philosophy
-
-Atlas Core never asks for a Provider.
-
-It asks for a Capability.
-
-Example
-
-Health Module
-
-↓
-
-Storage Capability
-
-↓
-
-SQLite Provider
-
-or
-
-↓
-
-Google Sheets Provider
-
-The Health Module never knows which one is used.
-
----
-
-# Relationship
-
-Capability
-
-↓
-
-Implemented By
-
-↓
-
-Provider
-
-↓
-
-Consumed By
-
-↓
-
-Module
-
----
-
-# Standard Capabilities
-
-Storage
-
-Artificial Intelligence
-
-Authentication
-
-Notifications
-
-Search
-
-Calendar
-
-Backup
-
-Synchronization
-
-Analytics
-
-Configuration
-
-Logging
-
-Scheduling
-
-Permissions
-
-Future Capabilities may be introduced without changing Atlas Core.
-
----
-
-# Capability Lifecycle
-
-Every Capability:
-
-* Registers itself
-* Declares its Interface
-* Accepts compatible Providers
-* Exposes functionality to Modules
-
----
-
-# Capability Registry
-
-Atlas Runtime maintains a Capability Registry.
-
-The Registry stores:
-
-Capability Name
-
-Supported Interface Version
-
-Active Provider
-
-Available Providers
-
-Status
-
-Modules query the Registry instead of Providers.
-
----
-
-# Resolution
-
-When a Module requests a Capability:
-
-1. Runtime checks Registry.
-2. Finds compatible Provider.
-3. Returns Provider instance.
-4. Module interacts only with the Interface.
-
----
-
-# Fallback
-
-If multiple Providers support a Capability:
-
-Runtime should select based on:
-
-* User Preference
-* Application Configuration
-* Priority
-* Availability
-
----
-
-# Design Rules
-
-Capabilities:
-
-* Define behavior only.
-* Never contain implementation.
-* Must remain stable.
-* Should evolve through versioning.
-* Should avoid provider-specific concepts.
-
----
-
-# Examples
-
-Storage Capability
-
-Implemented by:
-
-SQLite
-
-PostgreSQL
-
-Google Sheets
-
-Atlas Cloud
-
-AI Capability
-
-Implemented by:
-
-Gemini
-
-Claude
-
-OpenAI
-
-Ollama
-
-DeepSeek
-
----
-
-# Future
-
-Support:
-
-Capability discovery
-
-Capability version negotiation
-
-Capability priorities
-
-Capability composition
-
-Multiple active providers
+- **Imports:** The Capabilities required to function.
+- **Exports:** 
+  - **Services:** RPC endpoints, classes, or direct invocation handles.
+  - **Widgets:** UI components exposed for Atlas Studio.
+  - **Events:** Pub/sub channels that other Workers can subscribe to (negotiated by Atlas, but routed directly or via a message-broker Worker).
+  - **Commands:** CLI actions.
