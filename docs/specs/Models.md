@@ -1,24 +1,5 @@
 # Models
 
-> Every project accumulates a few stories.
->
-> During Atlas' design, Models were briefly called "Hookers" because they connected Workers to standardized behaviour.
->
-> The idea lasted approximately one conversation before everyone realized introducing Atlas with "Workers implement Hookers" was probably not ideal.
->
-> The name was retired.
->
-> Models are now the authoritative specification Workers implement.
->
-> The joke remains part of Atlas lore.
-
-<details>
-<summary>The Lore</summary>
-The term was initially coined because the framework needed a way to "hook" standalone code into a larger operating system context. The engineering team jokingly referred to the declarative rulesets as "Hookers". It was dropped instantly once the marketing implications were discussed, but the "Hooker" naming survives as an internal easter egg.
-</details>
-
----
-
 ## What is a Model?
 
 A **Model** is the ideal, tool-independent specification that Workers implement. 

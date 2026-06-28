@@ -32,6 +32,7 @@ nav:
     - Studio Suite: studio-suite.md
   - Guides:
     - SDK Quick Start: guides/sdk-quickstart.md
+    - SDK Primitive Functions: guides/sdk-primitives.md
     - Building Workers & Roles: guides/building-workers.md
     - Building Managers: guides/building-managers.md
     - CLI Reference: guides/cli-reference.md

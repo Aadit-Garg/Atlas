@@ -4,6 +4,19 @@ The Atlas Studio Suite is the official developer toolkit and ecosystem for the A
 
 Atlas itself is just the execution model (the Runtime). To build, validate, and manage software effectively on Atlas, developers use the Studio Suite. The Suite is designed as an ecosystem of distinct tools, each handling a specific phase of the software lifecycle.
 
+## Atlas Studio (Workspace Manager)
+
+**Atlas Studio** is the primary visual entry point into the Atlas ecosystem. 
+*(Conceptual equivalent: Visual Studio Code + Project Explorer).*
+
+Architecturally, Atlas Studio is a Manager application. Its responsibility is to organize projects, environments, and downloaded dependencies before the Runtime is even booted for a specific project.
+
+**Responsibilities:**
+- Creating new projects via visual wizards (or the underlying `atlas new` CLI).
+- Opening and managing existing Workspaces.
+- Browsing installed Managers, Workers, and Models.
+- Managing Packages and dependencies.
+
 ## Miron (Runtime Console)
 
 **Miron** is the visual runtime console for Atlas. 

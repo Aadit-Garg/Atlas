@@ -14,9 +14,16 @@ The concepts were merged into the singular **Worker**. A Worker is the only exec
 ## Rulesets → Models
 Originally, the declarative blueprints for Capabilities were called "Rulesets". This was renamed to **Models** to better reflect that they model data structures, interfaces, and expected behaviors, rather than just "rules".
 
-*Note: During one specific design session, Models were briefly referred to as **Hookers** because they "hooked" Workers into standardized behavior. This name was retired almost immediately for obvious linguistic reasons, but the joke survives as internal lore.*
-
 ## Manager (from Primitive to Role)
 Early designs treated a "Manager" (like Life or Scholar) as a special runtime primitive that sat above Applications. This introduced unnecessary complexity into the Runtime.
 
 The Runtime was simplified. A Manager is now simply a normal Worker that happens to have the metadata Role `manager`. It orchestrates other Workers using standard Capability imports, removing the need for the Runtime to treat it uniquely.
+
+## Models → Capability & Resource Models
+As Atlas evolved its Translation Layer to seamlessly bridge multi-language Workers, a critical distinction emerged. Calling everything a "Model" conflated behavior with data structures.
+
+To fix this, the concept was formally split:
+- **Capability Models** define behavior (verbs).
+- **Resource Models** define canonical data structures (nouns).
+
+This distinction allowed the Translation Layer to use Resource Models as canonical targets for serialization, massively simplifying cross-language data exchange.

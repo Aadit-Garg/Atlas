@@ -98,17 +98,3 @@ Architecture
       ↓
 Multi-language Runtime
 ```
-
----
-
-## Fun Fact
-
-Every project accumulates a few stories.
-
-During Atlas' design, the Model system almost had a very different name. For roughly one design session it was internally called **Hookers**, because they "hooked" Workers to standardized behavior.
-
-That idea survived exactly until someone pointed out what "hooker" usually means in English.
-
-The name was immediately retired. Models were born.
-
-The joke, however, remains a part of Atlas history.
