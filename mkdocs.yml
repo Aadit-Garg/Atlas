@@ -33,7 +33,16 @@ nav:
   - Guides:
     - SDK Quick Start: guides/sdk-quickstart.md
     - Building Workers & Roles: guides/building-workers.md
+    - Building Managers: guides/building-managers.md
     - CLI Reference: guides/cli-reference.md
+  - Standard Library (v1):
+    - Catalog Overview: stdlib/index.md
+    - Core: stdlib/core.md
+    - Storage: stdlib/storage.md
+    - Networking: stdlib/networking.md
+    - System: stdlib/system.md
+    - UI & Media: stdlib/ui-media.md
+    - AI & Hardware: stdlib/ai-hardware.md
   - Architecture (v1.0):
     - Execution Model: architecture/execution-model.md
     - Core Runtime: specs/Core.md

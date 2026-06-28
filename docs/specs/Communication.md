@@ -23,7 +23,20 @@ Optional:
   - capability.analytics.telemetry
 ```
 
-Atlas (the Room Steward) reads this metadata and decides whether to create a new Room for this collaboration, or simply create direct Sessions. **This decision is 100% metadata-driven and never heuristic.**
+### Unsatisfied Capabilities
+Atlas evaluates the Header during Binding negotiation.
+- **Required:** If a Required capability cannot be satisfied (e.g., no Provider exists), Atlas **Fails Fast** and prevents the requesting Worker from starting or joining the Room.
+- **Optional:** If an Optional capability cannot be satisfied, the Worker starts normally, but the Binding is marked as `FAILED`. Any attempt to invoke it will return a `CapabilityUnavailable` error, allowing the Worker to degrade gracefully.
+
+### Rooms vs. Direct Sessions
+Atlas reads the metadata and decides whether to create a new Room for this collaboration, or simply create direct Sessions. **This decision is 100% metadata-driven and never heuristic.**
+
+The decision rules are as follows:
+- **Direct Session:** Used when two Workers require isolated, point-to-point communication with no shared state cache (e.g., a simple API request).
+- **Room:** A Room is instantiated when:
+  1. Three or more Workers need to collaborate in a single lifecycle boundary.
+  2. The Workers need to share a synchronized execution cache (the Room Registry).
+  3. Observers or Telemetry Workers are declared, requiring a dedicated scope to monitor the Invocations without polluting global traffic.
 
 ## Sessions
 Sessions remain the fundamental communication primitive. **Rooms DO NOT replace Sessions.** 

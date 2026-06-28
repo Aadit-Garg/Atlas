@@ -20,6 +20,11 @@ Every Room owns a local Registry, managed by the Room Steward.
 
 The Room Registry functions as an **execution cache**. Workers inside the Room communicate through this local Registry rather than repeatedly querying the Global Registry, ensuring massive scalability and reducing locks.
 
+### Consistency & Recovery
+Because the Room Registry is a cache, it can drift from the Global Registry if the ecosystem topology changes (e.g., a Worker dies). 
+The **Global Registry is always the definitive source of truth.** 
+If a Room is suspended or frozen, the Global Registry retains a checkpoint of the Room's metadata. During recovery, the Room Registry is destroyed and completely rebuilt from the Global Registry's checkpoint. Workers should never treat the Room Registry as durable storage.
+
 **Stores:**
 - Room Participants (Workers bound to the Room)
 - Participant Bindings

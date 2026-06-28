@@ -34,6 +34,7 @@ Atlas solves this by introducing **Workers** and **Models**. By forcing all exec
 ## Core Concepts
 
 - **Worker:** The ONLY executable primitive in Atlas. Owns business logic and state.
+- **Manager:** A composition pattern. A Manager is just a Worker with the `manager` Role that uses the SDK to declare which other Workers are required to run an application. Managers are built by developers, not provided as official tooling.
 - **Room:** An execution context representing a collaboration between Workers. Rooms are stewarded by Atlas.
 - **Session:** The communication primitive connecting Workers. Exists inside Rooms.
 - **Binding:** A negotiated connection established by Atlas between a requesting Worker and a providing Worker.

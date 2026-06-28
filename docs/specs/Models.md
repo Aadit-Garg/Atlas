@@ -41,3 +41,13 @@ A Model may define:
 - **Workers NEVER own Models.**
 
 Models exist independently of any implementation. This allows the Solon developer toolchain to validate any Worker against a Model without executing the Worker itself.
+
+## Model Versioning Policy
+
+Because Models are contracts between independent Workers, they must be strictly versioned using Semantic Versioning (e.g., `v1.0.0`).
+
+### Compatibility Rules
+- **Minor Version Bumps (e.g., `v1.0` -> `v1.1`):** Indicate backward-compatible additions (e.g., a new optional capability or event). A Worker requiring `v1.0` can safely bind to a Provider exporting `v1.1`.
+- **Major Version Bumps (e.g., `v1.0` -> `v2.0`):** Indicate breaking changes to the contract (e.g., changing input schemas, dropping a capability). A Worker requiring `v1.0` **will not bind** to a Provider exporting `v2.0` unless a backward-compatibility Adapter (Translator) is explicitly declared.
+
+If a Standard Model evolves and introduces a breaking change, ecosystem stability is preserved because the Runtime enforces these strict version boundaries during Binding negotiation.
