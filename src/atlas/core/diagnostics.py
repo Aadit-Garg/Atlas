@@ -91,6 +91,16 @@ class InvalidTopologyError(AtlasError):
     def __init__(self, message: str, context: Optional[Dict[str, str]] = None):
         super().__init__(code="ERR_INVALID_TOPOLOGY", severity=Severity.FATAL, message=message, context=context or {})
 
+class TranslationFailedError(AtlasError):
+    """Raised when no compatible translation chain can be found."""
+    def __init__(self, message: str, context: Optional[Dict[str, str]] = None):
+        super().__init__(code="ERR_TRANSLATION_FAILED", severity=Severity.FATAL, message=message, context=context or {})
+
+class TranslationCycleError(AtlasError):
+    """Raised when a translation loop is detected."""
+    def __init__(self, message: str, context: Optional[Dict[str, str]] = None):
+        super().__init__(code="ERR_TRANSLATION_CYCLE", severity=Severity.WARNING, message=message, context=context or {})
+
 
 
 # ---------------------------------------------------------

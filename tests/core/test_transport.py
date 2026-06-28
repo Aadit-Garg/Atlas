@@ -9,9 +9,8 @@ from atlas.core.transport import InMemoryTransport, TransportPayload, TransportE
 # ---------------------------------------------------------
 def test_send_to_unregistered_listener():
     transport = InMemoryTransport()
-    payload = TransportPayload(source_id="workerA", target_id="workerB", data=b"hello")
-    
-    res = transport.send(payload)
+    # Sending to a channel with no listener
+    res = transport.send("chan-1", b"hello")
     assert res.is_err()
     assert isinstance(res.error, TransportError)
     
@@ -19,6 +18,7 @@ def test_send_to_unregistered_listener():
 
 def test_successful_delivery():
     transport = InMemoryTransport()
+    transport.create_channel("chan-1").unwrap()
     
     received_data = None
     event = threading.Event()
@@ -28,10 +28,9 @@ def test_successful_delivery():
         received_data = payload.data
         event.set()
         
-    transport.register_listener("workerB", on_receive)
+    transport.receive("chan-1", on_receive)
     
-    payload = TransportPayload(source_id="workerA", target_id="workerB", data=b"atlas-v1")
-    res = transport.send(payload)
+    res = transport.send("chan-1", b"atlas-v1")
     assert res.is_ok()
     
     # Wait for the async dispatcher thread
@@ -42,14 +41,15 @@ def test_successful_delivery():
 
 def test_deregister_listener():
     transport = InMemoryTransport()
-    transport.register_listener("workerB", lambda p: None)
+    transport.create_channel("chan-1").unwrap()
+    transport.receive("chan-1", lambda p: None)
     
-    res = transport.send(TransportPayload("A", "workerB", b"test"))
+    res = transport.send("chan-1", b"test")
     assert res.is_ok()
     
-    transport.deregister_listener("workerB")
+    transport.close("chan-1")
     
-    res = transport.send(TransportPayload("A", "workerB", b"test"))
+    res = transport.send("chan-1", b"test")
     assert res.is_err()
     
     transport.shutdown()
@@ -60,6 +60,7 @@ def test_deregister_listener():
 def test_concurrent_senders():
     """10 workers sending bytes to a single receiver simultaneously."""
     transport = InMemoryTransport()
+    transport.create_channel("chan-server").unwrap()
     
     received_count = 0
     lock = threading.Lock()
@@ -72,11 +73,11 @@ def test_concurrent_senders():
             if received_count == 100:
                 event.set()
                 
-    transport.register_listener("server", on_receive)
+    transport.receive("chan-server", on_receive)
     
     def worker_send():
         for _ in range(10):
-            transport.send(TransportPayload("client", "server", b"msg"))
+            transport.send("chan-server", b"msg")
             
     threads = []
     for _ in range(10):
@@ -98,6 +99,7 @@ def test_concurrent_senders():
 def test_high_throughput():
     """Testing 10,000 messages pushed through the queue rapidly."""
     transport = InMemoryTransport()
+    transport.create_channel("chan-sink").unwrap()
     
     received = []
     event = threading.Event()
@@ -107,10 +109,10 @@ def test_high_throughput():
         if len(received) == 10000:
             event.set()
             
-    transport.register_listener("sink", on_receive)
+    transport.receive("chan-sink", on_receive)
     
     for i in range(10000):
-        transport.send(TransportPayload("source", "sink", b"x"))
+        transport.send("chan-sink", b"x")
         
     # Give it up to 3 seconds to process 10k messages
     success = event.wait(timeout=3.0)

@@ -27,6 +27,10 @@ class GlobalRegistry:
         # Indices
         self._capabilities_index: Dict[str, List[str]] = {}
         self._roles_index: Dict[str, List[str]] = {}
+        self._translation_index: Dict[str, List[str]] = {}  # source_format -> List[worker_id]
+        
+        # Generation counters for cache invalidation
+        self.translation_generation = 0
         
         # Health Tracking
         self._metrics: Dict[str, WorkerMetrics] = {}
@@ -63,6 +67,15 @@ class GlobalRegistry:
                     self._roles_index[role] = []
                 if worker_id not in self._roles_index[role]:
                     self._roles_index[role].append(worker_id)
+                    
+            # Build Translation Index
+            if instance.manifest.translations:
+                for trans in instance.manifest.translations:
+                    if trans.source_format not in self._translation_index:
+                        self._translation_index[trans.source_format] = []
+                    if worker_id not in self._translation_index[trans.source_format]:
+                        self._translation_index[trans.source_format].append(worker_id)
+                self.translation_generation += 1
 
             return Result.ok(None)
         finally:
@@ -88,11 +101,18 @@ class GlobalRegistry:
 
             # Prune Role Index
             for role in instance.manifest.roles:
-                if role in self._roles_index:
-                    if worker_id in self._roles_index[role]:
-                        self._roles_index[role].remove(worker_id)
+                if role in self._roles_index and worker_id in self._roles_index[role]:
+                    self._roles_index[role].remove(worker_id)
                     if not self._roles_index[role]:
                         del self._roles_index[role]
+                        
+            if instance.manifest.translations:
+                for trans in instance.manifest.translations:
+                    if trans.source_format in self._translation_index and worker_id in self._translation_index[trans.source_format]:
+                        self._translation_index[trans.source_format].remove(worker_id)
+                        if not self._translation_index[trans.source_format]:
+                            del self._translation_index[trans.source_format]
+                self.translation_generation += 1
 
             del self._workers[worker_id]
             del self._metrics[worker_id]

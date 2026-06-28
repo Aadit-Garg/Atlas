@@ -34,6 +34,13 @@ class ExportDefinition:
     precedence: int = 0
 
 @dataclass(frozen=True)
+class TranslationDefinition:
+    source_format: str
+    target_format: str
+    version_compat: str = "*"
+    cost: int = 1
+
+@dataclass(frozen=True)
 class WorkerManifest:
     id: str
     name: str
@@ -46,6 +53,7 @@ class WorkerManifest:
     
     imports: List[ImportDefinition]
     exports: List[ExportDefinition]
+    translations: List[TranslationDefinition] = field(default_factory=list)
 
 # ---------------------------------------------------------
 # Readers-Writer Lock (RwLock) implementation
@@ -154,17 +162,27 @@ class ManifestLoader:
                     version=exp.get("version", ""),
                     precedence=exp.get("precedence", 0)
                 ))
+                
+            translations = []
+            for trans in data.get("translations", []):
+                translations.append(TranslationDefinition(
+                    source_format=trans.get("source_format", ""),
+                    target_format=trans.get("target_format", ""),
+                    version_compat=trans.get("version_compat", "*"),
+                    cost=trans.get("cost", 1)
+                ))
 
             manifest = WorkerManifest(
-                id=worker_data["id"],
-                name=worker_data["name"],
-                version=worker_data["version"],
-                language=worker_data["language"],
-                roles=worker_data["roles"],
+                id=data.get("id", ""),
+                name=data.get("name", ""),
+                version=data.get("version", ""),
+                language=data.get("language", ""),
+                roles=data.get("roles", []),
                 execution=execution,
                 communication=communication,
                 imports=imports,
-                exports=exports
+                exports=exports,
+                translations=translations
             )
         except Exception as e:
             return Result.err(ValidationError(f"Hydration failed: {e}", context={"file": path}))
