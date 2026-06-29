@@ -88,6 +88,26 @@ def main():
     # The known commands from argparse:
     known_commands = {"new", "run", "test", "doctor", "validate", "inspect", "info", "clean", "build"}
     
+    # Check if we should print the banner
+    if len(sys.argv) == 1 or "-h" in sys.argv or "--help" in sys.argv:
+        from rich.console import Console
+        from rich.panel import Panel
+        from rich.text import Text
+        
+        console = Console()
+        ascii_art = """
+    █████╗ ████████╗██╗      █████╗ ███████╗
+   ██╔══██╗╚══██╔══╝██║     ██╔══██╗██╔════╝
+   ███████║   ██║   ██║     ███████║███████╗
+   ██╔══██║   ██║   ██║     ██╔══██║╚════██║
+   ██║  ██║   ██║   ███████╗██║  ██║███████║
+   ╚═╝  ╚═╝   ╚═╝   ╚══════╝╚═╝  ╚═╝╚══════╝
+        """
+        title = Text(ascii_art, style="bold cyan")
+        subtitle = Text("\nThe Universal Software Architecture Platform\n", style="italic bright_white")
+        content = Text.assemble(title, subtitle, justify="center")
+        console.print(Panel(content, border_style="cyan", padding=(1, 2)))
+
     if len(sys.argv) > 1 and sys.argv[1] not in known_commands and not sys.argv[1].startswith("-"):
         # Treat sys.argv[1] as a manager alias and bypass argparse
         class DummyArgs:
@@ -132,7 +152,7 @@ def main():
         # Artifact Discovery Fallback
         # The command is not a primitive command. Let's see if it's a manager alias.
         import os
-        from sdk.atlas_sdk.discovery import DiscoveryEngine
+        from atlas_sdk.discovery import DiscoveryEngine
         import importlib.util
         from rich.console import Console
         console = Console()

@@ -31,7 +31,7 @@ def main(args=None):
             worker_id = worker_req.get("id")
             
             # Use Discovery Engine to find the worker
-            from sdk.atlas_sdk.discovery import DiscoveryEngine
+            from atlas_sdk.discovery import DiscoveryEngine
             atlas_root = os.path.dirname(os.path.dirname(os.path.dirname(manager_dir)))
             engine = DiscoveryEngine(atlas_root)
             worker_info = engine.find_worker(worker_id)

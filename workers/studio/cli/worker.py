@@ -1,4 +1,4 @@
-from sdk.atlas_sdk.discovery import DiscoveryEngine
+from atlas_sdk.discovery import DiscoveryEngine
 import argparse
 import sys
 import os

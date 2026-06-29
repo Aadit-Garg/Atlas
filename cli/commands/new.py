@@ -1,6 +1,6 @@
 from rich.console import Console
 from rich.prompt import Prompt, Confirm
-from sdk.atlas_sdk.generator import ProjectGenerator
+from atlas_sdk.generator import ProjectGenerator
 import os
 
 console = Console()

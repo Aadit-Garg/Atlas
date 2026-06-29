@@ -64,6 +64,9 @@ Programming Language
 
 The Studio Suite is the official developer toolkit for the Atlas ecosystem. 
 
+### Atlas Studio
+The visual authoring environment and workspace manager for the Atlas ecosystem. Features a drag-and-drop Topology Designer to wire up Workers without code, an Integrated Marketplace for 1-click capabilities, and cross-language toolchain orchestration.
+
 ### Miron
 The runtime console. Equivalent to Task Manager + Docker Desktop + Runtime Inspector. Used to inspect running Workers, monitor communication, view the Registry, and manage topology.
 
