@@ -95,17 +95,15 @@ def main():
         from rich.text import Text
         
         console = Console()
-        ascii_art = r"""
-    ___  ______ __       ___    _____
-   /   |/_  __// /      /   |  / ___/
-  / /| | / /  / /      / /| |  \__ \ 
- / ___ |/ /  / /___   / ___ | ___/ / 
-/_/  |_/_/  /_____/  /_/  |_|/____/  
-        """
-        title = Text(ascii_art, style="bold cyan")
-        subtitle = Text("\nThe Universal Software Architecture Platform\n", style="italic bright_white")
-        content = Text.assemble(title, subtitle, justify="center")
-        console.print(Panel(content, border_style="cyan", padding=(1, 2)))
+        logo = (
+            "\n[bold cyan]    ▲[/bold cyan]\n"
+            "[bold cyan]   ▲ ▲[/bold cyan]    [bold white]ATLAS[/bold white]\n"
+            "[bold cyan]  ▲ ▲ ▲[/bold cyan]   [dim white]The Universal Software Architecture Platform[/dim white]\n"
+        )
+        
+        # Override help formatting
+        if len(sys.argv) == 1 or "-h" in sys.argv or "--help" in sys.argv:
+            console.print(logo)
         
         from rich.table import Table
         table = Table(show_header=False, box=None, padding=(0, 2))

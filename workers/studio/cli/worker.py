@@ -237,17 +237,19 @@ class StudioCliWorker:
             from rich.text import Text
             import questionary
             
-            ascii_art = r"""
-    ___  ______ __       ___    _____
-   /   |/_  __// /      /   |  / ___/
-  / /| | / /  / /      / /| |  \__ \ 
- / ___ |/ /  / /___   / ___ | ___/ / 
-/_/  |_/_/  /_____/  /_/  |_|/____/  
-            """
+            logo = (
+                "\n[bold magenta]    ❖[/bold magenta]\n"
+                "[bold magenta]   ❖ ❖[/bold magenta]    [bold bright_white]ATLAS STUDIO[/bold bright_white]\n"
+                "[bold magenta]  ❖ ❖ ❖[/bold magenta]   [dim white]Part of the Atlas Software Suite[/dim white]\n"
+            )
+            
+            def clear_screen():
+                os.system('cls' if os.name == 'nt' else 'clear')
+                console.clear()
             
             while True:
-                console.clear()
-                console.print(Text(ascii_art, style="bold magenta"))
+                clear_screen()
+                console.print(logo)
                 console.print(Panel(
                     "[bold bright_white]Welcome to Atlas Studio[/bold bright_white]\n"
                     "[italic]The visual workspace manager for modular software.[/italic]",
@@ -279,7 +281,7 @@ class StudioCliWorker:
                     ])
                 ).ask()
                 
-                console.clear()
+                clear_screen()
                 
                 if not choice or choice == "quit":
                     console.print("[magenta]Exiting Atlas Studio. Goodbye![/magenta]")
