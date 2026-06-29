@@ -1,30 +1,15 @@
-# Atlas SDK Quick Start 🚀
+# SDK Quickstart
 
-Welcome to Atlas! This guide will get you from zero to a running Worker in under 5 minutes.
+> Get from zero to a running Atlas Worker in under 5 minutes.
 
 ---
 
 ## Prerequisites
 
-Make sure you have:
 - Python 3.13+
-- Git
+- Atlas CLI installed (`pip install -e .` from the Atlas repository root)
 
-## 0. Install the SDK
-
-Currently, Atlas is in its early stages and should be installed directly from source.
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/atlas-system-suite/Atlas.git
-   cd Atlas
-   ```
-2. Install the `atlas` package in editable mode (we recommend using a virtual environment):
-   ```bash
-   pip install -e .
-   ```
-
-Run `atlas doctor` to verify your environment and installation:
+Verify your setup:
 
 ```bash
 atlas doctor
@@ -32,27 +17,37 @@ atlas doctor
 
 ---
 
-## 1. Create Your First Worker
+## Step 1: Scaffold a Worker
 
 ```bash
-atlas new worker my_greeter
-cd my_greeter
+atlas new
 ```
 
-This scaffolds a complete Worker project:
+The interactive wizard will ask you:
+
+1. **Type**: Select `worker`
+2. **Name**: Enter `my_greeter`
+3. **Namespace**: Enter `atlas` (or your own)
+4. **Version**: Press Enter for `1.0.0`
+5. **Description**: Enter `A simple greeter`
+6. **Language**: Select `python`
+7. **Confirm**: Press Enter to generate
+
+This creates the following project:
+
 ```text
 my_greeter/
-  manifest.yaml      # Declares capabilities & metadata
-  worker.py          # Your business logic
-  test_my_greeter.py # Pre-written tests
-  README.md          # Auto-generated docs
+├── atlas.yaml          # Worker manifest
+├── worker.py           # Implementation
+├── test_my_greeter.py  # Tests
+└── README.md           # Documentation
 ```
 
 ---
 
-## 2. Write Your Logic
+## Step 2: Understand the Generated Code
 
-Open `worker.py` and modify the `hello` method:
+### `worker.py`
 
 ```python
 from atlas_sdk import WorkerBase, capability, on_invocation
@@ -61,73 +56,149 @@ from atlas_sdk import WorkerBase, capability, on_invocation
 class MyGreeterWorker(WorkerBase):
     _worker_id = "atlas.my_greeter"
     _worker_name = "MyGreeterWorker"
+    _worker_version = "1.0.0"
     _worker_roles = ["worker"]
 
-    @capability("atlas.my_greeter.greet", version="1.0.0")
-    @on_invocation("greet")
-    def greet(self, name: str = "World") -> str:
-        return f"Hello, {name}! Welcome to Atlas. 🌍"
+    def on_init(self):
+        """Called after construction. Set up your state here."""
+        pass
+
+    def on_start(self):
+        """Called when the runtime starts this worker."""
+        pass
+
+    def on_stop(self):
+        """Called on shutdown. Clean up resources here."""
+        pass
+
+    @capability("atlas.my_greeter.hello", version="1.0.0")
+    @on_invocation("hello")
+    def hello(self, name: str = "World") -> str:
+        """A simple hello capability. Replace me with real logic!"""
+        return f"Hello, {name}! From MyGreeterWorker."
 ```
 
-That's it. No boilerplate. No XML. No 47-step configuration ritual. Just a class, a decorator, and your logic.
+**Key concepts:**
+- `WorkerBase` — The base class every Worker extends.
+- `@capability(...)` — Exports a method so other Workers can discover and use it.
+- `@on_invocation(...)` — Registers a method as a handler for incoming invocation requests.
+- `on_init()` / `on_start()` / `on_stop()` — Lifecycle hooks called by the Runtime.
+
+### `atlas.yaml`
+
+The manifest declares your Worker's identity and capabilities to the Runtime:
+
+```yaml
+kind: worker
+id: atlas.my_greeter
+name: MyGreeterWorker
+version: 1.0.0
+language: python
+roles: [worker]
+
+exports:
+  - capability: atlas.my_greeter
+    version: 1.0.0
+```
 
 ---
 
-## 3. Test It
+## Step 3: Add Real Logic
+
+Let's make the greeter actually do something:
+
+```python
+from atlas_sdk import WorkerBase, capability, on_invocation
+
+
+class MyGreeterWorker(WorkerBase):
+    _worker_id = "atlas.my_greeter"
+    _worker_name = "MyGreeterWorker"
+    _worker_version = "1.0.0"
+    _worker_roles = ["worker"]
+
+    def on_init(self):
+        self.greetings_sent = 0
+
+    @capability("atlas.my_greeter.hello", version="1.0.0")
+    @on_invocation("hello")
+    def hello(self, name: str = "World") -> str:
+        self.greetings_sent += 1
+        return f"Hello, {name}! (Greeting #{self.greetings_sent})"
+
+    @capability("atlas.my_greeter.stats", version="1.0.0")
+    @on_invocation("stats")
+    def stats(self) -> dict:
+        return {"total_greetings": self.greetings_sent}
+```
+
+Update `atlas.yaml` to export the new capability:
+
+```yaml
+exports:
+  - capability: atlas.my_greeter.hello
+    version: 1.0.0
+  - capability: atlas.my_greeter.stats
+    version: 1.0.0
+```
+
+---
+
+## Step 4: Test
+
+```python
+# test_my_greeter.py
+from atlas_sdk.testing import MockRuntime, assert_capability_exported
+from worker import MyGreeterWorker
+
+
+def test_exports():
+    worker = MyGreeterWorker()
+    assert_capability_exported(worker, "atlas.my_greeter.hello")
+    assert_capability_exported(worker, "atlas.my_greeter.stats")
+
+
+def test_greeting():
+    runtime = MockRuntime()
+    runtime.register(MyGreeterWorker, "atlas.my_greeter")
+    result = runtime.invoke("atlas.my_greeter", "hello", {"name": "Atlas"})
+    assert "Hello, Atlas!" in result
+
+
+def test_stats():
+    runtime = MockRuntime()
+    runtime.register(MyGreeterWorker, "atlas.my_greeter")
+    runtime.invoke("atlas.my_greeter", "hello", {"name": "Test"})
+    runtime.invoke("atlas.my_greeter", "hello", {"name": "Test"})
+    stats = runtime.invoke("atlas.my_greeter", "stats")
+    assert stats["total_greetings"] == 2
+```
+
+Run:
 
 ```bash
 atlas test
 ```
 
-The scaffolded tests verify that your capabilities are exported correctly and your invocation handlers work.
-
 ---
 
-## 4. Validate Your Manifest
+## Step 5: Run
 
 ```bash
-atlas validate
+atlas run
 ```
 
-This checks your `manifest.yaml` for missing fields, invalid policies, and circular dependencies.
-
----
-
-## 5. Inspect It
-
-```bash
-atlas inspect
-```
-
-See a pretty-printed summary of your Worker's capabilities, imports, and translations.
-
----
-
-## 6. Build a Package
-
-```bash
-atlas build
-```
-
-This creates a deterministic `.atlas` package in the `dist/` directory, ready for distribution.
+This reads `atlas.yaml` from the current directory and boots the Atlas Runtime with your Worker loaded.
 
 ---
 
 ## What's Next?
 
-- **Build a Model**: `atlas new model my_storage_model`
-- **Build an Adapter**: `atlas new adapter json_to_msgpack`
-- **Compose a Manager**: `atlas new manager my_notes_app`
-- **Read the full guides**:
-  - [Building Workers & Roles](building-workers.md)
-  - [Building Managers](building-managers.md)
-
----
-
-## The Golden Rule
-
-> **Program against Models, never implementations.**
-
-If your Worker needs storage, import the `StorageModel`. If it needs logging, import the `LoggerModel`. Atlas will resolve the right Worker at runtime. You just focus on your business logic.
-
-Happy building! ✨
+| Guide | Description |
+|---|---|
+| [Building Workers](building-workers.md) | Deep dive into every file, decorator, lifecycle hook, and execution policy. |
+| [Building Models](building-models.md) | Create abstract contracts that define capability interfaces. |
+| [Building Adapters](building-adapters.md) | Build stateless format translation workers. |
+| [Building Managers](building-managers.md) | Compose multiple Workers into a complete application. |
+| [SDK Primitives](sdk-primitives.md) | Complete API reference for all SDK classes and functions. |
+| [CLI Reference](cli-reference.md) | All available `atlas` commands and options. |

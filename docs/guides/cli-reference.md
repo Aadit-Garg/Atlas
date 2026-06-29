@@ -17,23 +17,27 @@ atlas new
 **Fast Path:**
 You can bypass the wizard by providing the type and name as arguments:
 
+**Usage (Fast-Path):**
 ```bash
-atlas new <type> <name>
+atlas new <type> <name> [--namespace <ns>] [--language <lang>]
 ```
 
-| Type | Description |
-|------|-------------|
-| `worker` | A new Worker with manifest, implementation, tests, and README |
-| `model` | A new Model with abstract contract and compliance tests |
-| `adapter` | A new Adapter (Translator) with manifest and conversion stub |
-| `manager` | A new Manager with composition builder and configuration |
+**Arguments (Fast-Path):**
+- `<type>`: `worker`, `model`, `adapter`, or `manager`
+- `<name>`: The name of your project (e.g., `my_app`)
+
+**Options (Fast-Path):**
+- `--namespace <ns>`: Identifier namespace (default: `atlas`)
+- `--language <lang>`: Programming language (default: `python`)
 
 **Examples:**
 ```bash
-atlas new worker my_logger
-atlas new model storage_model
-atlas new adapter json_to_yaml
-atlas new manager notes_app
+atlas new                           # Launches the interactive wizard
+atlas new worker my_logger          # Scaffolds a Python worker
+atlas new worker fast_calc --language rust  # Scaffolds a Rust worker
+atlas new model storage_model       
+atlas new adapter json_to_yaml      
+atlas new manager notes_app         
 ```
 
 ---
