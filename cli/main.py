@@ -95,19 +95,39 @@ def main():
         from rich.text import Text
         
         console = Console()
-        ascii_art = """
-    █████╗ ████████╗██╗      █████╗ ███████╗
-   ██╔══██╗╚══██╔══╝██║     ██╔══██╗██╔════╝
-   ███████║   ██║   ██║     ███████║███████╗
-   ██╔══██║   ██║   ██║     ██╔══██║╚════██║
-   ██║  ██║   ██║   ███████╗██║  ██║███████║
-   ╚═╝  ╚═╝   ╚═╝   ╚══════╝╚═╝  ╚═╝╚══════╝
+        ascii_art = r"""
+    ___  ______ __       ___    _____
+   /   |/_  __// /      /   |  / ___/
+  / /| | / /  / /      / /| |  \__ \ 
+ / ___ |/ /  / /___   / ___ | ___/ / 
+/_/  |_/_/  /_____/  /_/  |_|/____/  
         """
         title = Text(ascii_art, style="bold cyan")
         subtitle = Text("\nThe Universal Software Architecture Platform\n", style="italic bright_white")
         content = Text.assemble(title, subtitle, justify="center")
         console.print(Panel(content, border_style="cyan", padding=(1, 2)))
-
+        
+        from rich.table import Table
+        table = Table(show_header=False, box=None, padding=(0, 2))
+        table.add_column("Command", style="bold green", width=20)
+        table.add_column("Description", style="dim")
+        
+        table.add_row("new", "Scaffold a new Atlas project (Worker, Model, Adapter, Manager)")
+        table.add_row("run", "Run the Atlas application from atlas.yaml")
+        table.add_row("test", "Run tests and generate stubs")
+        table.add_row("doctor", "Validate your development environment")
+        table.add_row("validate", "Validate manifest files")
+        table.add_row("inspect", "Inspect a Worker or Manager's capabilities")
+        table.add_row("info", "Show Atlas SDK info")
+        table.add_row("clean", "Clean build artifacts")
+        table.add_row("build", "Build an .atlas package")
+        table.add_row("studio", "Launch the Atlas Studio interactive workspace manager")
+        
+        console.print("\n[bold cyan]Available Commands:[/bold cyan]")
+        console.print(table)
+        console.print("\n[dim]Use `atlas <command> --help` for more information on a specific command.[/dim]")
+        sys.exit(0)
+        
     if len(sys.argv) > 1 and sys.argv[1] not in known_commands and not sys.argv[1].startswith("-"):
         # Treat sys.argv[1] as a manager alias and bypass argparse
         class DummyArgs:
