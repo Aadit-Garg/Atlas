@@ -1,183 +1,247 @@
+document.addEventListener("DOMContentLoaded", () => {
     // ----------------------------------------------------
-    // 0. ATLAS CONSTELLATION (Home Page Hero)
-    // A lightweight orbital animation showing Workers
-    // binding to a central Runtime core.
+    // 0. ANIME.JS (Home Page Hero: 3D Atlas Core)
+    // A lightweight 3D representation of the Atlas architecture
     // ----------------------------------------------------
     function initAnimeCityscape() {
         if (typeof anime === 'undefined') return;
         const container = document.getElementById('anime-cityscape');
         if (!container) return;
 
-        // Build SVG constellation
-        const svgNS = "http://www.w3.org/2000/svg";
-        const cx = 400, cy = 300; // center
-        const svg = document.createElementNS(svgNS, "svg");
-        svg.setAttribute("viewBox", "0 0 800 600");
-        svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
-        svg.style.cssText = "width:100%;height:100%;position:absolute;top:0;left:0;";
+        container.innerHTML = ''; // Clear container
 
-        // Workers with Atlas-meaningful names, colors, and orbital radii
-        const workers = [
-            { label: "UI",      color: "#3b82f6", radius: 160, speed: 25000, startAngle: 0 },
-            { label: "Storage", color: "#10b981", radius: 200, speed: 32000, startAngle: 60 },
-            { label: "AI",      color: "#a855f7", radius: 140, speed: 20000, startAngle: 120 },
-            { label: "Events",  color: "#f59e0b", radius: 220, speed: 38000, startAngle: 180 },
-            { label: "DB",      color: "#ef4444", radius: 170, speed: 28000, startAngle: 240 },
-            { label: "Logger",  color: "#06b6d4", radius: 190, speed: 35000, startAngle: 300 },
+        // Inner wrapper to isolate 3D transform from the container's perspective
+        const scene = document.createElement('div');
+        scene.style.cssText = `
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            transform-style: preserve-3d;
+            transform: translateY(15%) rotateX(65deg) rotateZ(-45deg) scale(1.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        `;
+        container.appendChild(scene);
+
+        // Helper to create a 3D square block
+        function create3DBlock(x, y, w, h, zOffset, colorSet, label) {
+            let block = document.createElement('div');
+            block.style.cssText = `
+                position: absolute;
+                left: calc(50% + ${x - w/2}px);
+                top: calc(50% + ${y - h/2}px);
+                width: ${w}px;
+                height: ${h}px;
+                background: ${colorSet.bg};
+                border: 1px solid ${colorSet.border};
+                transform-style: preserve-3d;
+                transform: translateZ(${zOffset}px);
+                box-shadow: 0 0 20px ${colorSet.glow};
+            `;
+
+            let roof = document.createElement('div');
+            roof.style.cssText = `
+                position: absolute; width: 100%; height: 100%;
+                background: ${colorSet.roof};
+                transform: translateZ(5px);
+                display: flex; align-items: center; justify-content: center;
+                color: white; font-family: 'JetBrains Mono', monospace;
+                font-weight: bold; font-size: ${w > 80 ? '1.2rem' : (w > 60 ? '0.9rem' : '0.75rem')};
+                text-shadow: 0 0 8px white;
+            `;
+            roof.innerText = label;
+
+            block.appendChild(roof);
+            scene.appendChild(block);
+            return block;
+        }
+
+        // Helper to create logo-based center node
+        function createLogoCore(x, y, size, zOffset, colorSet) {
+            let block = document.createElement('div');
+            block.style.cssText = `
+                position: absolute;
+                left: calc(50% + ${x - size/2}px);
+                top: calc(50% + ${y - size/2}px);
+                width: ${size}px;
+                height: ${size}px;
+                background: ${colorSet.bg};
+                border: 2px solid ${colorSet.border};
+                transform-style: preserve-3d;
+                transform: translateZ(${zOffset}px);
+                box-shadow: 0 0 40px ${colorSet.glow}, inset 0 0 30px ${colorSet.glow};
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            `;
+
+            let img = document.createElement('img');
+            img.src = 'assets/atlas_logo_transparent.png';
+            img.style.cssText = `
+                width: 70%; height: 70%;
+                object-fit: contain;
+                filter: drop-shadow(0 0 15px rgba(59,130,246,0.8)) brightness(1.3);
+                transform: translateZ(10px);
+            `;
+            block.appendChild(img);
+
+            scene.appendChild(block);
+            return block;
+        }
+
+        // Helper to draw a square neon Room outline
+        function createRoomOutline(x, y, size, colorSet, label) {
+            let room = document.createElement('div');
+            room.style.cssText = `
+                position: absolute;
+                left: calc(50% + ${x - size/2}px);
+                top: calc(50% + ${y - size/2}px);
+                width: ${size}px;
+                height: ${size}px;
+                border: 2px dashed ${colorSet.border};
+                background: transparent;
+                transform: translateZ(5px);
+                box-shadow: 0 0 25px ${colorSet.glow}, inset 0 0 25px ${colorSet.glow};
+                display: flex;
+                align-items: flex-end;
+                justify-content: flex-end;
+                padding: 8px;
+            `;
+            
+            let nameTag = document.createElement('div');
+            nameTag.style.cssText = `
+                color: ${colorSet.glow};
+                font-family: 'JetBrains Mono', monospace;
+                font-size: 0.8rem;
+                font-weight: bold;
+                text-shadow: 0 0 5px ${colorSet.glow};
+            `;
+            nameTag.innerText = label;
+            room.appendChild(nameTag);
+
+            scene.appendChild(room);
+            return room;
+        }
+
+        const colors = {
+            core: { bg: 'rgba(59, 130, 246, 0.15)', border: 'rgba(59, 130, 246, 0.8)', roof: 'rgba(59, 130, 246, 0.6)', glow: 'rgba(59,130,246,0.8)' },
+            worker: { bg: 'rgba(16, 185, 129, 0.15)', border: 'rgba(16, 185, 129, 0.8)', roof: 'rgba(16, 185, 129, 0.6)', glow: 'rgba(16,185,129,0.7)' },
+            ai: { bg: 'rgba(168, 85, 247, 0.15)', border: 'rgba(168, 85, 247, 0.8)', roof: 'rgba(168, 85, 247, 0.6)', glow: 'rgba(168,85,247,0.7)' },
+            db: { bg: 'rgba(239, 68, 68, 0.15)', border: 'rgba(239, 68, 68, 0.8)', roof: 'rgba(239, 68, 68, 0.6)', glow: 'rgba(239,68,68,0.7)' },
+            room: { bg: 'transparent', border: 'rgba(245, 158, 11, 0.9)', roof: 'transparent', glow: 'rgba(245,158,11,0.6)' }
+        };
+
+        // 1. Central Core with Logo
+        const core = createLogoCore(0, 0, 120, 40, colors.core);
+        core.classList.add('atlas-core-block');
+
+        // 2. Define Rooms and their Workers
+        const roomData = [
+            { label: 'Session Room', angle: 0, radius: 280, size: 160, workers: [{label: 'UI', color: colors.worker, offsetX: -25, offsetY: -25}, {label: 'DB', color: colors.db, offsetX: 35, offsetY: 25}] },
+            { label: 'Agent Room',   angle: 120, radius: 280, size: 160, workers: [{label: 'AI', color: colors.ai, offsetX: 0, offsetY: 0}] },
+            { label: 'System Room',  angle: 240, radius: 280, size: 160, workers: [{label: 'NET', color: colors.worker, offsetX: -30, offsetY: 20}, {label: 'LOG', color: colors.worker, offsetX: 30, offsetY: -30}] }
         ];
 
-        // Orbital ring guides (subtle)
-        workers.forEach(w => {
-            const ring = document.createElementNS(svgNS, "circle");
-            ring.setAttribute("cx", cx);
-            ring.setAttribute("cy", cy);
-            ring.setAttribute("r", w.radius);
-            ring.setAttribute("fill", "none");
-            ring.setAttribute("stroke", w.color);
-            ring.setAttribute("stroke-opacity", "0.08");
-            ring.setAttribute("stroke-width", "1");
-            ring.setAttribute("stroke-dasharray", "4 8");
-            svg.appendChild(ring);
-        });
+        const allNodes = [];
+        const packetTargets = [];
 
-        // Binding lines (from center to each worker)
-        const lines = workers.map(w => {
-            const line = document.createElementNS(svgNS, "line");
-            line.setAttribute("x1", cx);
-            line.setAttribute("y1", cy);
-            line.setAttribute("stroke", w.color);
-            line.setAttribute("stroke-width", "1.5");
-            line.setAttribute("stroke-opacity", "0.3");
-            line.setAttribute("stroke-dasharray", "6 4");
-            line.classList.add("atlas-binding-line");
-            svg.appendChild(line);
-            return line;
-        });
+        roomData.forEach(r => {
+            const rad = r.angle * (Math.PI / 180);
+            const rx = Math.cos(rad) * r.radius;
+            const ry = Math.sin(rad) * r.radius;
+            
+            // Draw neon room outline
+            let roomNode = createRoomOutline(rx, ry, r.size, colors.room, r.label);
+            roomNode.classList.add('atlas-room-outline');
 
-        // Central Runtime core glow
-        const coreGlow = document.createElementNS(svgNS, "circle");
-        coreGlow.setAttribute("cx", cx);
-        coreGlow.setAttribute("cy", cy);
-        coreGlow.setAttribute("r", "45");
-        coreGlow.setAttribute("fill", "url(#coreGrad)");
-        coreGlow.setAttribute("filter", "url(#glow)");
+            // Draw connector line from core to room
+            let connector = document.createElement('div');
+            connector.style.cssText = `
+                position: absolute;
+                left: 50%; top: 50%;
+                width: ${r.radius - r.size/2}px; height: 2px;
+                background: linear-gradient(90deg, ${colors.core.glow}, transparent);
+                transform-origin: 0 50%;
+                transform: rotate(${r.angle}deg) translateZ(5px);
+                opacity: 0.6;
+            `;
+            scene.appendChild(connector);
 
-        // SVG defs for gradient + glow
-        const defs = document.createElementNS(svgNS, "defs");
-        defs.innerHTML = `
-            <radialGradient id="coreGrad">
-                <stop offset="0%" stop-color="rgba(59,130,246,0.4)"/>
-                <stop offset="100%" stop-color="rgba(59,130,246,0)"/>
-            </radialGradient>
-            <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
-                <feGaussianBlur stdDeviation="8" result="blur"/>
-                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-            </filter>
-        `;
-        svg.appendChild(defs);
-        svg.appendChild(coreGlow);
-
-        // Core label
-        const coreLabel = document.createElementNS(svgNS, "text");
-        coreLabel.setAttribute("x", cx);
-        coreLabel.setAttribute("y", cy);
-        coreLabel.setAttribute("text-anchor", "middle");
-        coreLabel.setAttribute("dominant-baseline", "middle");
-        coreLabel.setAttribute("fill", "#38bdf8");
-        coreLabel.setAttribute("font-family", "'JetBrains Mono', monospace");
-        coreLabel.setAttribute("font-size", "13");
-        coreLabel.setAttribute("font-weight", "700");
-        coreLabel.setAttribute("opacity", "0.9");
-        coreLabel.textContent = "Runtime";
-        svg.appendChild(coreLabel);
-
-        // Core inner ring
-        const coreRing = document.createElementNS(svgNS, "circle");
-        coreRing.setAttribute("cx", cx);
-        coreRing.setAttribute("cy", cy);
-        coreRing.setAttribute("r", "30");
-        coreRing.setAttribute("fill", "none");
-        coreRing.setAttribute("stroke", "#3b82f6");
-        coreRing.setAttribute("stroke-width", "1.5");
-        coreRing.setAttribute("stroke-opacity", "0.5");
-        coreRing.classList.add("atlas-core-ring");
-        svg.appendChild(coreRing);
-
-        // Worker nodes (groups with circle + text)
-        const nodeGroups = workers.map((w, i) => {
-            const g = document.createElementNS(svgNS, "g");
-            g.classList.add("atlas-worker-node");
-
-            const dot = document.createElementNS(svgNS, "circle");
-            dot.setAttribute("r", "18");
-            dot.setAttribute("fill", w.color);
-            dot.setAttribute("fill-opacity", "0.15");
-            dot.setAttribute("stroke", w.color);
-            dot.setAttribute("stroke-width", "2");
-
-            const dotInner = document.createElementNS(svgNS, "circle");
-            dotInner.setAttribute("r", "5");
-            dotInner.setAttribute("fill", w.color);
-
-            const text = document.createElementNS(svgNS, "text");
-            text.setAttribute("y", "32");
-            text.setAttribute("text-anchor", "middle");
-            text.setAttribute("fill", w.color);
-            text.setAttribute("font-family", "'JetBrains Mono', monospace");
-            text.setAttribute("font-size", "10");
-            text.setAttribute("font-weight", "600");
-            text.setAttribute("opacity", "0.8");
-            text.textContent = w.label;
-
-            g.appendChild(dot);
-            g.appendChild(dotInner);
-            g.appendChild(text);
-            svg.appendChild(g);
-            return g;
-        });
-
-        container.appendChild(svg);
-
-        // Animate orbits with anime.js
-        workers.forEach((w, i) => {
-            const angle = { value: w.startAngle };
-
-            anime({
-                targets: angle,
-                value: w.startAngle + 360,
-                duration: w.speed,
-                loop: true,
-                easing: 'linear',
-                update: () => {
-                    const rad = (angle.value * Math.PI) / 180;
-                    const x = cx + Math.cos(rad) * w.radius;
-                    const y = cy + Math.sin(rad) * w.radius * 0.45; // elliptical orbit
-                    nodeGroups[i].setAttribute("transform", `translate(${x}, ${y})`);
-                    lines[i].setAttribute("x2", x);
-                    lines[i].setAttribute("y2", y);
-                }
+            // Draw workers inside the room
+            r.workers.forEach(w => {
+                const wx = rx + w.offsetX;
+                const wy = ry + w.offsetY;
+                const block = create3DBlock(wx, wy, 45, 45, 20, w.color, w.label);
+                block.classList.add('atlas-worker-block');
+                allNodes.push(block);
+                packetTargets.push({ x: wx, y: wy });
             });
         });
 
-        // Pulse the binding lines
+        // 3. Data Packets
+        for (let i = 0; i < 15; i++) {
+            let packet = document.createElement('div');
+            packet.className = 'atlas-data-packet';
+            let pColor = ['#3b82f6', '#10b981', '#ef4444', '#a855f7', '#f59e0b'][Math.floor(Math.random() * 5)];
+            packet.style.cssText = `
+                position: absolute;
+                left: 50%; top: 50%;
+                width: 8px; height: 8px;
+                background: ${pColor};
+                border-radius: 50%;
+                box-shadow: 0 0 15px 4px ${pColor};
+                transform-style: preserve-3d;
+                transform: translateZ(20px);
+                z-index: 10;
+                opacity: 0;
+            `;
+            scene.appendChild(packet);
+        }
+
+        // --- ANIMATIONS ---
+
         anime({
-            targets: '.atlas-binding-line',
-            strokeOpacity: [0.1, 0.5, 0.1],
-            strokeDashoffset: [0, 20],
-            duration: 3000,
-            delay: anime.stagger(400),
+            targets: '.atlas-core-block',
+            translateZ: [40, 60],
+            duration: 4000,
+            direction: 'alternate',
             loop: true,
             easing: 'easeInOutSine'
         });
 
-        // Pulse the core ring
         anime({
-            targets: '.atlas-core-ring',
-            r: [30, 35, 30],
-            strokeOpacity: [0.3, 0.8, 0.3],
-            duration: 4000,
+            targets: '.atlas-worker-block',
+            translateZ: [20, 45],
+            duration: () => anime.random(3000, 5000),
+            direction: 'alternate',
             loop: true,
             easing: 'easeInOutSine'
+        });
+
+        anime({
+            targets: scene,
+            rotateZ: [-45, 315],
+            duration: 160000,
+            loop: true,
+            easing: 'linear'
+        });
+
+        document.querySelectorAll('.atlas-data-packet').forEach((packet, idx) => {
+            const target = packetTargets[idx % packetTargets.length];
+            setTimeout(() => {
+                anime({
+                    targets: packet,
+                    translateX: [0, target.x],
+                    translateY: [0, target.y],
+                    translateZ: [40, 20],
+                    opacity: [0, 1, 0],
+                    duration: anime.random(1500, 2500),
+                    delay: () => anime.random(0, 3000),
+                    loop: true,
+                    easing: 'easeOutExpo'
+                });
+            }, idx * 250);
         });
     }
 
@@ -528,7 +592,12 @@
 
     if (typeof document$ !== "undefined") {
         document$.subscribe(function() {
-            if (typeof gsap !== 'undefined') gsap.globalTimeline.clear();
+            if (typeof gsap !== 'undefined') {
+                gsap.globalTimeline.clear();
+                if (typeof ScrollTrigger !== 'undefined') {
+                    ScrollTrigger.getAll().forEach(t => t.kill());
+                }
+            }
             initTyped();
             initAnime();
             initGSAP();

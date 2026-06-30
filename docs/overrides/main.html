@@ -3,13 +3,16 @@
 {% block tabs %}
   {{ super() }}
   {% if page.is_homepage %}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800;900&display=swap" rel="stylesheet">
     <!-- Premium Book / Learning Guide Entrance -->
     <div class="atlas-hero-container" style="position: relative; overflow: visible;">
-      <!-- Cyberpunk Data Cityscape — breaks out of container -->
-      <div id="anime-cityscape" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; perspective: 800px; display: flex; align-items: center; justify-content: center;"></div>
+      <!-- Cyberpunk Data Cityscape — fixed background -->
+      <div id="anime-cityscape" style="position: fixed; top: 0; left: 0; width: 100%; height: 100vh; z-index: 0; pointer-events: none; perspective: 800px; display: flex; align-items: center; justify-content: center;"></div>
       <div class="atlas-hero-content" style="position: relative; z-index: 1;">
-        <div class="atlas-company-label animate-reveal">Atlas System Suite</div>
-        <h1 class="atlas-hero-title animate-reveal delay-1">
+        <div class="atlas-company-label animate-reveal" style="font-family: 'Inter', sans-serif; font-weight: 600; letter-spacing: 0.15em;">Atlas System Suite</div>
+        <h1 class="atlas-hero-title animate-reveal delay-1" style="font-family: 'Inter', sans-serif; font-weight: 900; text-shadow: 0 2px 30px rgba(0,0,0,0.9), 0 0 60px rgba(0,0,0,0.5); letter-spacing: -0.02em;">
           Welcome to the<br>
           Modular Future<br>
           of Computation
